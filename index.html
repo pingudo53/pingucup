@@ -1064,7 +1064,7 @@ function finalizarPartidoSeleccion(plan, g1, g2, goles, asistencias, atajadas, g
   if(nota > 8.9){ jugador.media += 1; jugador.selMVP++; esMVP = true; }
 
   let cambioMedia = 0;
-  if(nota >= 7){ jugador.media += 2; cambioMedia = 2; }
+  if(nota >= 7.3){ jugador.media += 2; cambioMedia = 2; }
   else if(nota < 6.3){ jugador.media -= 1; cambioMedia = -1; }
 
   clampMedia();
@@ -1522,7 +1522,7 @@ function finalizarPartidoEnVivo(plan, g1, g2, goles, asistencias, atajadas, gole
   if(nota > 8.6){ jugador.media += 1; jugador.mvp++; }
 
   let cambioMedia = 0;
-  if(nota >= 7){ jugador.media += 2; cambioMedia = 2; }
+  if(nota >= 7.2){ jugador.media += 2; cambioMedia = 2; }
   else if(nota < 6.2){ jugador.media -= 1; cambioMedia = -1; }
 
   clampMedia();
