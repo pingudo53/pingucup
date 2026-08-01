@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PINGU CUP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@400;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde-oscuro:#0c2e21;
+    --verde-cancha:#123f2c;
+    --verde-linea:#1e6b47;
+    --dorado:#d7ac3d;
+    --dorado-brillo:#f0c85e;
+    --crema:#f3ecd8;
+    --tinta:#132018;
+    --rojo:#c1392b;
+    --gris-linea: rgba(243,236,216,0.18);
+    --sombra: rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      repeating-linear-gradient(90deg, var(--verde-cancha) 0px, var(--verde-cancha) 60px, var(--verde-linea) 60px, var(--verde-linea) 120px);
+    font-family:'Barlow Condensed', sans-serif;
+    color:var(--tinta);
+    display:flex;
+    justify-content:center;
+    padding:24px 12px 60px;
+  }
+
+  #app{
+    width:100%;
+    max-width:620px;
+  }
+
+  /* ---------- SCOREBOARD HEADER ---------- */
+  .scoreboard{
+    background:var(--verde-oscuro);
+    border:3px solid var(--dorado);
+    border-radius:10px;
+    padding:14px 18px;
+    margin-bottom:18px;
+    box-shadow:0 8px 24px var(--sombra);
+    display:none;
+  }
+  .scoreboard.visible{display:block;}
+  .scoreboard-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-family:'Anton', sans-serif;
+    color:var(--dorado-brillo);
+    letter-spacing:1px;
+  }
+  .scoreboard-top .jornada{font-size:15px; color:var(--crema); opacity:0.75;}
+  .scoreboard-top .titulo-mini{font-size:20px;}
+  .scoreboard-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:8px;
+    font-family:'Roboto Mono', monospace;
+  }
+  .scoreboard-club{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--crema);
+    font-size:14px;
+  }
+  .scoreboard-pts{
+    background:#000;
+    color:var(--dorado-brillo);
+    font-weight:700;
+    font-size:20px;
+    padding:2px 10px;
+    border-radius:4px;
+    min-width:34px;
+    text-align:center;
+    border:1px solid var(--dorado);
+  }
+
+  .tabla-posiciones{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+    font-family:'Roboto Mono', monospace;
+  }
+  .tabla-posiciones th{
+    font-family:'Anton', sans-serif;
+    font-size:11px;
+    letter-spacing:1px;
+    color:var(--dorado);
+    text-align:center;
+    padding:4px 4px 8px;
+    opacity:0.8;
+  }
+  .tabla-posiciones th.col-club{ text-align:left; }
+  .tabla-posiciones td{
+    text-align:center;
+    padding:6px 4px;
+    color:var(--crema);
+    font-size:15px;
+    border-top:1px solid rgba(243,236,216,0.15);
+  }
+  .tabla-posiciones td.col-club{
+    text-align:left;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .tabla-posiciones tr.mi-club td{ color:var(--dorado-brillo); font-weight:700; }
+  .tabla-posiciones td.pts{
+    font-weight:700;
+    color:var(--dorado-brillo);
+  }
+
+  /* ---------- CRESTS (placeholders) ---------- */
+  .crest{
+    width:26px;height:26px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Anton',sans-serif;
+    font-size:11px;
+    border:1.5px dashed var(--dorado);
+    color:var(--dorado-brillo);
+    background:rgba(215,172,61,0.08);
+    flex-shrink:0;
+  }
+  .crest.big{width:64px;height:64px;font-size:20px;border-width:2px;}
+  .crest img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+  /*
+    Escudos reales: pingu.jpeg (Pingu FC) y wachin.jpeg (Wachines FC).
+    Tienen que estar en la misma carpeta que este archivo HTML.
+  */
+
+  /* ---------- CARDS ---------- */
+  .card{
+    background:var(--crema);
+    border-radius:12px;
+    padding:22px 20px;
+    margin-bottom:16px;
+    box-shadow:0 10px 26px var(--sombra);
+    position:relative;
+    border:1px solid rgba(0,0,0,0.06);
+  }
+  .card::before{
+    content:"";
+    position:absolute; inset:8px;
+    border:1.5px dashed rgba(19,32,24,0.15);
+    border-radius:8px;
+    pointer-events:none;
+  }
+  .card h1, .card h2, .card h3{
+    font-family:'Anton', sans-serif;
+    letter-spacing:0.5px;
+    margin:0 0 10px;
+    color:var(--verde-oscuro);
+  }
+  .card h1{font-size:30px;}
+  .card h2{font-size:22px;}
+  .card h3{font-size:17px; color:var(--rojo);}
+  .card p{line-height:1.45; margin:6px 0; font-size:17px;}
+
+  .eyebrow{
+    font-family:'Anton', sans-serif;
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--dorado);
+    background:var(--verde-oscuro);
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:20px;
+    margin-bottom:10px;
+  }
+
+  /* ---------- HERO / TITLE SCREEN ---------- */
+  .hero{
+    text-align:center;
+    padding:36px 18px 28px;
+  }
+  .hero .marca{
+    font-family:'Anton', sans-serif;
+    font-size:52px;
+    color:var(--crema);
+    text-shadow:0 4px 0 var(--verde-oscuro), 0 10px 18px var(--sombra);
+    letter-spacing:2px;
+    line-height:0.95;
+  }
+  .hero .marca span{color:var(--dorado-brillo);}
+  .hero .sub{
+    font-family:'Barlow Condensed', sans-serif;
+    color:var(--crema);
+    font-size:16px;
+    opacity:0.85;
+    margin-top:6px;
+  }
+
+  /* ---------- FORM CONTROLS ---------- */
+  label.field-label{
+    font-family:'Anton', sans-serif;
+    font-size:13px;
+    letter-spacing:1px;
+    color:var(--verde-oscuro);
+    display:block;
+    margin:16px 0 8px;
+  }
+  input[type=text]{
+    width:100%;
+    padding:12px 14px;
+    font-size:18px;
+    font-family:'Barlow Condensed', sans-serif;
+    border:2px solid var(--verde-oscuro);
+    border-radius:8px;
+    background:#fff;
+    color:var(--tinta);
+  }
+  input[type=text]:focus{outline:2px solid var(--dorado);}
+
+  select.select-pais{
+    width:100%;
+    padding:12px 14px;
+    font-size:17px;
+    font-family:'Barlow Condensed', sans-serif;
+    border:2px solid var(--verde-oscuro);
+    border-radius:8px;
+    background:#fff;
+    color:var(--tinta);
+  }
+  select.select-pais:focus{outline:2px solid var(--dorado);}
+
+  .fila-pais{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .fila-pais select{flex:1;}
+  .bandera-img{
+    width:36px;
+    height:26px;
+    object-fit:cover;
+    border-radius:4px;
+    border:1px solid rgba(19,32,24,0.25);
+    flex-shrink:0;
+    vertical-align:middle;
+  }
+  .bandera-img.chica{width:24px; height:18px;}
+
+  .opciones-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:6px;
+  }
+  .opcion-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px;
+    border-radius:8px;
+    border:2px solid var(--verde-oscuro);
+    background:#fff;
+    cursor:pointer;
+    font-family:'Barlow Condensed', sans-serif;
+    font-size:16px;
+    font-weight:600;
+    color:var(--tinta);
+    transition:transform .12s ease, background .12s ease;
+    text-align:left;
+  }
+  .opcion-btn:hover{background:var(--dorado); transform:translateY(-2px);}
+  .opcion-btn.selected{background:var(--verde-oscuro); color:var(--crema); border-color:var(--dorado);}
+  .opcion-btn .emoji{font-size:20px;}
+
+  .club-btn{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+    padding:16px 10px;
+  }
+
+  .btn-principal{
+    display:block;
+    width:100%;
+    margin-top:20px;
+    padding:14px;
+    font-family:'Anton', sans-serif;
+    font-size:18px;
+    letter-spacing:1px;
+    background:var(--verde-oscuro);
+    color:var(--dorado-brillo);
+    border:2px solid var(--dorado);
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .12s ease;
+  }
+  .btn-principal:hover{background:#0a2419;}
+  .btn-principal:disabled{opacity:0.4; cursor:not-allowed;}
+
+  .btn-secundario{
+    display:block;
+    width:100%;
+    margin-top:10px;
+    padding:11px;
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:600;
+    font-size:16px;
+    background:transparent;
+    color:var(--verde-oscuro);
+    border:2px solid var(--verde-oscuro);
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .btn-secundario:hover{background:rgba(19,32,24,0.06);}
+
+  /* ---------- MATCH RESULT ---------- */
+  .marcador{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    margin:14px 0;
+    font-family:'Roboto Mono', monospace;
+  }
+  .marcador .equipo{
+    text-align:center; font-size:14px; max-width:110px;
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+  }
+  .marcador .equipo img{
+    width:38px; height:38px; border-radius:50%;
+    object-fit:cover; border:2px solid var(--dorado);
+    background:#fff;
+  }
+  .marcador .goles{
+    font-family:'Anton', sans-serif;
+    font-size:38px;
+    color:var(--verde-oscuro);
+    background:#fff;
+    border:2px solid var(--verde-oscuro);
+    border-radius:8px;
+    padding:2px 14px;
+  }
+  .stat-linea{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 2px;
+    border-bottom:1px dashed var(--gris-linea);
+    font-size:16px;
+  }
+  .stat-linea b{font-family:'Roboto Mono', monospace;}
+  .badge-resultado{
+    display:inline-block;
+    font-family:'Anton', sans-serif;
+    font-size:13px;
+    letter-spacing:1px;
+    padding:4px 10px;
+    border-radius:20px;
+    margin-bottom:8px;
+  }
+  .badge-gano{background:#1e6b47; color:#fff;}
+  .badge-perdio{background:var(--rojo); color:#fff;}
+  .badge-empato{background:#8a7a3d; color:#fff;}
+
+  .media-cambio{font-family:'Roboto Mono', monospace; font-weight:700;}
+  .sube{color:#1e6b47;}
+  .baja{color:var(--rojo);}
+
+  /* ---------- PARTIDO EN VIVO ---------- */
+  .punto-vivo{
+    display:inline-block;
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--rojo);
+    margin-left:6px;
+    animation:parpadeo 1s infinite;
+  }
+  @keyframes parpadeo{ 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+  .reloj-partido{
+    font-family:'Roboto Mono', monospace;
+    font-size:15px;
+    font-weight:700;
+    color:var(--verde-oscuro);
+    text-align:center;
+    background:rgba(19,32,24,0.06);
+    border-radius:20px;
+    padding:3px 12px;
+    display:inline-block;
+    margin-bottom:4px;
+  }
+
+  .relato-partido{
+    margin-top:16px;
+    max-height:220px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column-reverse;
+  }
+  .linea-relato{
+    font-size:15px;
+    padding:7px 4px;
+    border-bottom:1px dashed var(--gris-linea);
+    animation:aparecer .25s ease;
+  }
+  @keyframes aparecer{ from{opacity:0; transform:translateY(-4px);} to{opacity:1; transform:translateY(0);} }
+
+  /* ---------- MINIJUEGO DE GOL ---------- */
+  .minijuego-overlay{
+    position:fixed; inset:0;
+    background:rgba(6,20,13,0.78);
+    display:flex; align-items:center; justify-content:center;
+    z-index:999;
+    padding:16px;
+    transition:background .3s ease;
+  }
+  .minijuego-overlay.acierto{ background:rgba(30,107,71,0.85); }
+  .minijuego-overlay.fallo{ background:rgba(193,57,43,0.85); }
+
+  .minijuego-card{
+    background:var(--crema);
+    border-radius:14px;
+    padding:22px 20px;
+    max-width:380px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 14px 32px rgba(0,0,0,0.5);
+  }
+  .minijuego-card h3{
+    font-family:'Barlow Condensed', sans-serif;
+    font-weight:700;
+    font-size:17px;
+    color:var(--verde-oscuro);
+    margin:6px 0 18px;
+  }
+
+  .barra-gol{
+    position:relative;
+    height:26px;
+    background:#fff;
+    border:2px solid var(--verde-oscuro);
+    border-radius:6px;
+    margin-bottom:18px;
+    overflow:hidden;
+  }
+  .zona-verde{
+    position:absolute;
+    top:0; bottom:0;
+    background:rgba(30,107,71,0.35);
+    border-left:2px solid #1e6b47;
+    border-right:2px solid #1e6b47;
+  }
+  .indicador-gol{
+    position:absolute;
+    top:-3px; bottom:-3px;
+    width:5px;
+    background:var(--rojo);
+    border-radius:2px;
+    transform:translateX(-50%);
+    box-shadow:0 0 6px rgba(0,0,0,0.4);
+  }
+
+  .timer-barra{
+    height:5px;
+    background:rgba(19,32,24,0.12);
+    border-radius:4px;
+    margin-top:14px;
+    overflow:hidden;
+  }
+  .timer-relleno{
+    height:100%;
+    background:var(--dorado);
+    width:100%;
+  }
+
+  .direccion-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px;
+    margin-top:4px;
+  }
+  .direccion-btn{
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    gap:4px;
+    padding:16px 6px;
+    font-size:15px;
+    line-height:1.3;
+  }
+  .direccion-btn:disabled{ cursor:default; }
+  .direccion-btn.selected{
+    color:var(--crema);
+    border-color:var(--dorado);
+  }
+  .direccion-btn.selected.acierto{
+    background:#1e6b47;
+    border-color:#1e6b47;
+  }
+  .direccion-btn.selected.fallo{
+    background:var(--rojo);
+    border-color:var(--rojo);
+  }
+
+  /* ---------- FINAL SCREEN ---------- */
+  .trofeo-placeholder{
+    width:150px;height:150px;
+    margin:14px auto;
+    border-radius:14px;
+    border:2px dashed var(--dorado);
+    background:rgba(215,172,61,0.1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-family:'Anton', sans-serif;
+    color:var(--dorado);
+    font-size:13px;
+    letter-spacing:1px;
+    padding:10px;
+  }
+  /*
+    Para poner la foto de la copa: reemplazá el div de arriba (id="trofeo-img")
+    por, por ejemplo:
+    <img src="copa.png" style="width:150px;border-radius:14px;">
+  */
+
+  .footer-nota{
+    text-align:center;
+    color:rgba(243,236,216,0.55);
+    font-size:12px;
+    margin-top:18px;
+  }
+
+  @media (max-width:420px){
+    .hero .marca{font-size:38px;}
+    .opciones-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="scoreboard" id="scoreboard">
+    <div class="scoreboard-top">
+      <span class="titulo-mini">PINGU CUP - TABLA DE POSICIONES</span>
+      <span class="jornada" id="sb-jornada">SEMANA 1/12</span>
+    </div>
+    <table class="tabla-posiciones">
+      <thead>
+        <tr>
+          <th class="col-club">Club</th>
+          <th>GF</th>
+          <th>GC</th>
+          <th>DIF</th>
+          <th>PTS</th>
+        </tr>
+      </thead>
+      <tbody id="tabla-posiciones-body"></tbody>
+    </table>
+  </div>
+
+  <div id="screen-container"></div>
+
+  <div class="footer-nota">Pingu Cup · adaptado para jugar en el navegador</div>
+</div>
+
+<script>
+/* =========================================================
+   DATOS BASE
+   ========================================================= */
+const CLUBES = ["Pingu FC", "Wachines FC"];
+const POSICIONES = ["Arquero", "Defensor", "Mediocampista", "Delantero"];
+const POSICION_EMOJI = {"Arquero":"🧤","Defensor":"🛡️","Mediocampista":"🎯","Delantero":"⚽"};
+const TOTAL_SEMANAS = 12;
+
+// Listado de países (código ISO + nombre en español). La bandera se muestra
+// como imagen (flagcdn.com) armada a partir del código, con urlBandera().
+const PAISES = [
+  ["AR","Argentina"],["DZ","Argelia"],["AO","Angola"],["BJ","Benín"],["BW","Botsuana"],
+  ["BF","Burkina Faso"],["BI","Burundi"],["CV","Cabo Verde"],["CM","Camerún"],["CF","República Centroafricana"],
+  ["TD","Chad"],["KM","Comoras"],["CG","Congo"],["CD","República Democrática del Congo"],["CI","Costa de Marfil"],
+  ["DJ","Yibuti"],["EG","Egipto"],["GQ","Guinea Ecuatorial"],["ER","Eritrea"],["SZ","Esuatini"],
+  ["ET","Etiopía"],["GA","Gabón"],["GM","Gambia"],["GH","Ghana"],["GN","Guinea"],
+  ["GW","Guinea-Bisáu"],["KE","Kenia"],["LS","Lesoto"],["LR","Liberia"],["LY","Libia"],
+  ["MG","Madagascar"],["MW","Malaui"],["ML","Malí"],["MA","Marruecos"],["MU","Mauricio"],
+  ["MR","Mauritania"],["MZ","Mozambique"],["NA","Namibia"],["NE","Níger"],["NG","Nigeria"],
+  ["RW","Ruanda"],["ST","Santo Tomé y Príncipe"],["SN","Senegal"],["SC","Seychelles"],["SL","Sierra Leona"],
+  ["SO","Somalia"],["ZA","Sudáfrica"],["SS","Sudán del Sur"],["SD","Sudán"],["TZ","Tanzania"],
+  ["TG","Togo"],["TN","Túnez"],["UG","Uganda"],["ZM","Zambia"],["ZW","Zimbabue"],
+
+  ["AG","Antigua y Barbuda"],["BS","Bahamas"],["BB","Barbados"],["BZ","Belice"],["BO","Bolivia"],
+  ["BR","Brasil"],["CA","Canadá"],["CL","Chile"],["CO","Colombia"],["CR","Costa Rica"],
+  ["CU","Cuba"],["DM","Dominica"],["EC","Ecuador"],["SV","El Salvador"],["US","Estados Unidos"],
+  ["GD","Granada"],["GT","Guatemala"],["GY","Guyana"],["HT","Haití"],["HN","Honduras"],
+  ["JM","Jamaica"],["MX","México"],["NI","Nicaragua"],["PA","Panamá"],["PY","Paraguay"],
+  ["PE","Perú"],["DO","República Dominicana"],["KN","San Cristóbal y Nieves"],["LC","Santa Lucía"],
+  ["VC","San Vicente y las Granadinas"],["SR","Surinam"],["TT","Trinidad y Tobago"],["UY","Uruguay"],["VE","Venezuela"],
+
+  ["AF","Afganistán"],["SA","Arabia Saudita"],["AM","Armenia"],["AZ","Azerbaiyán"],["BH","Baréin"],
+  ["BD","Bangladés"],["BT","Bután"],["MM","Birmania"],["BN","Brunéi"],["KH","Camboya"],
+  ["QA","Catar"],["CN","China"],["CY","Chipre"],["KP","Corea del Norte"],["KR","Corea del Sur"],
+  ["AE","Emiratos Árabes Unidos"],["PH","Filipinas"],["GE","Georgia"],["IN","India"],["ID","Indonesia"],
+  ["IQ","Irak"],["IR","Irán"],["IL","Israel"],["JP","Japón"],["JO","Jordania"],
+  ["KZ","Kazajistán"],["KG","Kirguistán"],["KW","Kuwait"],["LA","Laos"],["LB","Líbano"],
+  ["MY","Malasia"],["MV","Maldivas"],["MN","Mongolia"],["NP","Nepal"],["OM","Omán"],
+  ["PK","Pakistán"],["PS","Palestina"],["SG","Singapur"],["LK","Sri Lanka"],["SY","Siria"],
+  ["TH","Tailandia"],["TJ","Tayikistán"],["TL","Timor Oriental"],["TR","Turquía"],["TM","Turkmenistán"],
+  ["UZ","Uzbekistán"],["VN","Vietnam"],["YE","Yemen"],
+
+  ["DE","Alemania"],["AD","Andorra"],["AT","Austria"],["BE","Bélgica"],["BY","Bielorrusia"],
+  ["BA","Bosnia y Herzegovina"],["BG","Bulgaria"],["CZ","Chequia"],["HR","Croacia"],["DK","Dinamarca"],
+  ["SK","Eslovaquia"],["SI","Eslovenia"],["ES","España"],["EE","Estonia"],["FI","Finlandia"],
+  ["FR","Francia"],["GR","Grecia"],["HU","Hungría"],["IE","Irlanda"],["IS","Islandia"],
+  ["IT","Italia"],["LV","Letonia"],["LI","Liechtenstein"],["LT","Lituania"],["LU","Luxemburgo"],
+  ["MT","Malta"],["MD","Moldavia"],["MC","Mónaco"],["ME","Montenegro"],["NO","Noruega"],
+  ["NL","Países Bajos"],["PL","Polonia"],["PT","Portugal"],["GB","Reino Unido"],["RO","Rumania"],
+  ["RU","Rusia"],["SM","San Marino"],["RS","Serbia"],["CH","Suiza"],["SE","Suecia"],
+  ["UA","Ucrania"],["VA","Ciudad del Vaticano"],["MK","Macedonia del Norte"],["AL","Albania"],
+
+  ["AU","Australia"],["FJ","Fiyi"],["KI","Kiribati"],["MH","Islas Marshall"],["FM","Micronesia"],
+  ["NR","Nauru"],["NZ","Nueva Zelanda"],["PW","Palaos"],["PG","Papúa Nueva Guinea"],["WS","Samoa"],
+  ["SB","Islas Salomón"],["TO","Tonga"],["TV","Tuvalu"],["VU","Vanuatu"]
+];
+
+function urlBandera(codigo, ancho){
+  return `https://flagcdn.com/w${ancho || 80}/${codigo.toLowerCase()}.png`;
+}
+
+const screen = document.getElementById("screen-container");
+const scoreboardEl = document.getElementById("scoreboard");
+
+function randInt(min, max){
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/* =========================================================
+   ESTADO DEL JUGADOR
+   ========================================================= */
+function crearJugador(nombre, posicion, club, nacionalidad, paisCodigo){
+  return {
+    nombre, posicion, club, nacionalidad, paisCodigo,
+    edad: 16,
+    media: 65,
+    velocidad: randInt(60,70),
+    definicion: randInt(60,70),
+    pase: randInt(60,70),
+    defensa: randInt(60,70),
+    fisico: randInt(60,70),
+    exp: 0,
+    partidos: 0,
+    goles: 0,
+    asistencias: 0,
+    atajadas: 0,
+    amarillas: 0,
+    rojas: 0,
+    mvp: 0,
+    promedio: 0,
+    titulos: 0
+  };
+}
+
+let jugador = null;
+let notaActual = 0;
+let semana = 1;
+let puntosPingu = 0;
+let puntosWachines = 0;
+let gfPingu = 0, gcPingu = 0;
+let gfWachines = 0, gcWachines = 0;
+
+function clampMedia(){
+  jugador.media = Math.max(50, Math.min(99, jugador.media));
+}
+
+/* =========================================================
+   SIMULACIÓN DE PARTIDO
+   ========================================================= */
+/* =========================================================
+   SIMULACIÓN DE PARTIDO EN VIVO
+   ========================================================= */
+
+// Calcula los números del partido (goles totales, cuántos te tocan a vos,
+// y tu probabilidad de definir) sin resolver nada todavía. Lo que se
+// resuelve en el momento, minuto a minuto, es el minijuego.
+function calcularPlanPartido(j){
+  const rival = j.club === "Pingu FC" ? "Wachines FC" : "Pingu FC";
+
+  const golesLocal = randInt(0,4);
+  const golesVisitante = randInt(0,4);
+
+  let golesMiEquipo, golesRival;
+  if(j.club === "Pingu FC"){
+    golesMiEquipo = golesLocal;
+    golesRival = golesVisitante;
+  } else {
+    golesMiEquipo = golesVisitante;
+    golesRival = golesLocal;
+  }
+
+  const golesEquipo = golesMiEquipo;
+  let participaciones = 0;
+  let probGol = 40;
+
+  if(golesEquipo > 0){
+    let maxParticipaciones;
+    if(j.media >= 90) maxParticipaciones = golesEquipo;
+    else if(j.media >= 85) maxParticipaciones = golesEquipo;
+    else if(j.media >= 80) maxParticipaciones = Math.max(1, golesEquipo);
+    else if(j.media >= 75) maxParticipaciones = Math.max(1, golesEquipo - 1);
+    else if(j.media >= 70) maxParticipaciones = Math.max(1, golesEquipo - 2);
+    else maxParticipaciones = Math.max(1, golesEquipo - 3);
+
+    if(j.posicion === "Delantero"){
+      // Los delanteros se llevan prácticamente todas las chances de gol
+      // del equipo: casi siempre todos los goles (o todos menos uno) son suyos.
+      participaciones = Math.max(1, golesEquipo - randInt(0, 1));
+    } else if(j.posicion === "Mediocampista"){
+      participaciones = randInt(1, Math.min(maxParticipaciones, golesEquipo));
+    } else if(j.posicion === "Defensor"){
+      participaciones = randInt(0, Math.min(2, maxParticipaciones));
+    } else {
+      // El arquero no participa de las jugadas ofensivas: sus chances son de atajar.
+      participaciones = 0;
+    }
+    participaciones = Math.min(participaciones, golesEquipo);
+
+    // Probabilidad de convertir en el minijuego (= ancho de la zona verde).
+    // Bien achicada para que dependa mucho más de la habilidad del jugador
+    // que de suerte; el delantero sigue siendo el que más chances reales
+    // tiene de acertar, pero la barra es corta para todos.
+    probGol = 26;
+    if(j.posicion === "Delantero") probGol += 16;
+    else if(j.posicion === "Mediocampista") probGol += 6;
+    else if(j.posicion === "Defensor") probGol -= 6;
+    probGol += (j.media - 65) * 0.6;
+    probGol = Math.max(10, Math.min(55, Math.round(probGol)));
+  }
+
+  // Si sos arquero, en vez de participar en jugadas ofensivas te tocan
+  // chances del rival para atajar. La cantidad de chances es aleatoria
+  // (menos que antes) y la probabilidad de atajar (= ancho de la zona
+  // verde) depende de tu media.
+  let chancesArquero = 0;
+  let probAtajar = 45;
+  if(j.posicion === "Arquero"){
+    chancesArquero = randInt(2, 4);
+    probAtajar = 35 + (j.media - 65) * 0.9;
+    probAtajar = Math.max(15, Math.min(70, Math.round(probAtajar)));
+  }
+
+  return { rival, golesMiEquipo, golesRival, golesEquipo, participaciones, probGol, chancesArquero, probAtajar };
+}
+
+// Arma la línea de tiempo: en qué minuto pasa cada gol (rival, de un
+// compañero, o una chance tuya que dispara el minijuego).
+function construirEventosPartido(plan, jugador){
+  const minutosUsados = new Set();
+  function minutoLibre(){
+    let m;
+    do { m = randInt(3, 90); } while(minutosUsados.has(m));
+    minutosUsados.add(m);
+    return m;
+  }
+
+  const eventos = [];
+
+  if(jugador.posicion === "Arquero"){
+    // Cada chance del rival se resuelve en vivo con el minijuego de atajada.
+    for(let i = 0; i < plan.chancesArquero; i++){
+      eventos.push({ minuto: minutoLibre(), tipo: "chance_arquero" });
+    }
+  } else {
+    for(let i = 0; i < plan.golesRival; i++){
+      eventos.push({ minuto: minutoLibre(), tipo: "rival_gol" });
+    }
+  }
+
+  const golesCompaneros = plan.golesEquipo - plan.participaciones;
+  for(let i = 0; i < golesCompaneros; i++){
+    eventos.push({ minuto: minutoLibre(), tipo: "equipo_gol_companero" });
+  }
+  for(let i = 0; i < plan.participaciones; i++){
+    eventos.push({ minuto: minutoLibre(), tipo: "chance_jugador" });
+  }
+
+  eventos.sort((a,b) => a.minuto - b.minuto);
+  return eventos;
+}
+
+// Cuánto tarda (en ms reales) cada minuto simulado. Más rápido = partido
+// más corto de ver; se puede ajustar sin romper nada más.
+const VELOCIDAD_MINUTO_MS = 75;
+
+function jugarPartidoDeLaSemana(){
+  const plan = calcularPlanPartido(jugador);
+  const eventos = construirEventosPartido(plan, jugador);
+  renderPartidoEnVivo(plan, eventos);
+}
+
+function renderPartidoEnVivo(plan, eventos){
+  const esPingu = jugador.club === "Pingu FC";
+
+  let g1 = 0, g2 = 0; // marcador visible: Pingu FC - Wachines FC
+  let miGoles = 0, miAsistencias = 0;
+  let atajadas = 0, golesRecibidos = 0; // solo relevantes si sos arquero
+  let minuto = 0;
+  let idxEvento = 0;
+
+  screen.innerHTML = `
+    <div class="card partido-vivo">
+      <span class="eyebrow">Semana ${semana}/${TOTAL_SEMANAS} · En vivo <span class="punto-vivo"></span></span>
+      <div style="text-align:center;"><div class="reloj-partido" id="reloj-partido">0'</div></div>
+      <div class="marcador">
+        <div class="equipo"><img src="pingu.png" alt="Pingu FC"><span>Pingu FC</span></div>
+        <div class="goles" id="marcador-vivo">0 - 0</div>
+        <div class="equipo"><img src="wachin.jpeg" alt="Wachines FC"><span>Wachines FC</span></div>
+      </div>
+      <div class="relato-partido" id="relato-partido"></div>
+    </div>
+  `;
+
+  const relatoEl = document.getElementById("relato-partido");
+  const relojEl = document.getElementById("reloj-partido");
+  const marcadorEl = document.getElementById("marcador-vivo");
+
+  function log(html){
+    const linea = document.createElement("div");
+    linea.className = "linea-relato";
+    linea.innerHTML = html;
+    relatoEl.prepend(linea);
+  }
+
+  function actualizarMarcadorVivo(){
+    marcadorEl.textContent = `${g1} - ${g2}`;
+  }
+
+  log(`<b>⚽ ¡Arranca el partido!</b>`);
+
+  let intervalId = setInterval(tick, VELOCIDAD_MINUTO_MS);
+
+  function tick(){
+    minuto++;
+    relojEl.textContent = `${minuto}'`;
+
+    while(idxEvento < eventos.length && eventos[idxEvento].minuto === minuto){
+      const ev = eventos[idxEvento];
+      idxEvento++;
+
+      if(ev.tipo === "rival_gol"){
+        if(esPingu) g2++; else g1++;
+        actualizarMarcadorVivo();
+        log(`😱 <b>${minuto}'</b> Gol de ${plan.rival}.`);
+
+      } else if(ev.tipo === "equipo_gol_companero"){
+        if(esPingu) g1++; else g2++;
+        actualizarMarcadorVivo();
+        log(`⚽ <b>${minuto}'</b> ¡Gol de un compañero! Buena jugada colectiva.`);
+
+      } else if(ev.tipo === "chance_jugador"){
+        clearInterval(intervalId);
+        log(`🔥 <b>${minuto}'</b> ¡Tenés una chance clara para hacer gol!`);
+
+        const jugarMinijuegoGol = randInt(1,2) === 1 ? mostrarMinijuegoGol : mostrarMinijuegoGolDireccion;
+        jugarMinijuegoGol(plan.probGol, (resultado)=>{
+          if(esPingu) g1++; else g2++;
+          actualizarMarcadorVivo();
+
+          if(resultado === "gol"){
+            miGoles++;
+            log(`🟢 <b>${minuto}'</b> ¡¡GOOOL DE ${jugador.nombre.toUpperCase()}!! ⚽`);
+          } else {
+            miAsistencias++;
+            log(`🎯 <b>${minuto}'</b> No llegaste a definir, pero la asistencia valió gol igual.`);
+          }
+
+          intervalId = setInterval(tick, VELOCIDAD_MINUTO_MS);
+        });
+        return;
+
+      } else if(ev.tipo === "chance_arquero"){
+        clearInterval(intervalId);
+        log(`⚠️ <b>${minuto}'</b> ¡Chance clara del rival! Tenés que atajarla.`);
+
+        const jugarMinijuegoAtajar = randInt(1,2) === 1 ? mostrarMinijuegoAtajada : mostrarMinijuegoAtajadaDireccion;
+        jugarMinijuegoAtajar(plan.probAtajar, (resultado)=>{
+          if(resultado === "atajada"){
+            atajadas++;
+            log(`🧤 <b>${minuto}'</b> ¡ATAJADÓN de ${jugador.nombre.toUpperCase()}! Que la guarde.`);
+          } else {
+            if(esPingu) g2++; else g1++;
+            actualizarMarcadorVivo();
+            golesRecibidos++;
+            log(`😱 <b>${minuto}'</b> Gol del rival. No llegaste a la pelota.`);
+          }
+
+          intervalId = setInterval(tick, VELOCIDAD_MINUTO_MS);
+        });
+        return;
+      }
+    }
+
+    if(minuto >= 90){
+      clearInterval(intervalId);
+      log(`<b>🏁 ¡Final del partido!</b>`);
+      setTimeout(()=> finalizarPartidoEnVivo(plan, g1, g2, miGoles, miAsistencias, atajadas, golesRecibidos), 900);
+    }
+  }
+}
+
+// El minijuego: una barra con un indicador que va y viene, y una zona verde
+// cuyo ancho depende de tu probabilidad de éxito (posición + media). Tocás
+// el botón cuando el indicador está dentro de la zona para acertar.
+// Se usa tanto para las chances de gol (delantero/mediocampista/defensor)
+// como para las chances de atajar (arquero); config define los textos y
+// qué resultado devuelve el callback en cada caso.
+function mostrarMinijuego(config){
+  const { probExito, media, eyebrow, subtitulo, textoBoton, idBoton, resultadoExito, resultadoFallo, callback } = config;
+
+  const overlay = document.createElement("div");
+  overlay.className = "minijuego-overlay";
+  overlay.innerHTML = `
+    <div class="minijuego-card">
+      <span class="eyebrow">${eyebrow}</span>
+      <h3>${subtitulo}</h3>
+      <div class="barra-gol">
+        <div class="zona-verde" id="zona-verde"></div>
+        <div class="indicador-gol" id="indicador-gol"></div>
+      </div>
+      <button class="btn-principal" id="${idBoton}">${textoBoton}</button>
+      <div class="timer-barra"><div class="timer-relleno" id="timer-relleno"></div></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const zonaAncho = probExito; // % del ancho de la barra: a mejor media, zona más ancha
+  const zonaIzq = randInt(0, 100 - zonaAncho);
+  const zonaEl = document.getElementById("zona-verde");
+  zonaEl.style.left = zonaIzq + "%";
+  zonaEl.style.width = zonaAncho + "%";
+
+  const indicadorEl = document.getElementById("indicador-gol");
+  const timerEl = document.getElementById("timer-relleno");
+
+  const inicio = performance.now();
+  const duracionTotal = 3000;
+  // La velocidad del indicador también depende de la media: a mejor media,
+  // barrido un poco más lento (más fácil de frenar); a peor media, más
+  // rápido. Se le suma una leve variación aleatoria para que no sea
+  // siempre exactamente igual.
+  let periodoBarrido = 1100 - (media - 65) * 5;
+  periodoBarrido = Math.max(750, Math.min(1450, periodoBarrido));
+  periodoBarrido += randInt(-60, 60);
+
+  let resuelto = false;
+  let rafId;
+
+  function frame(ahora){
+    const transcurrido = ahora - inicio;
+
+    const fase = (transcurrido % periodoBarrido) / periodoBarrido;
+    const pos = fase < 0.5 ? fase * 2 * 100 : (1 - (fase - 0.5) * 2) * 100;
+    indicadorEl.style.left = pos + "%";
+
+    const progreso = Math.min(1, transcurrido / duracionTotal);
+    timerEl.style.width = (100 - progreso * 100) + "%";
+
+    if(transcurrido >= duracionTotal){
+      resolver(false, 0);
+      return;
+    }
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function resolver(clickeado, posActual){
+    if(resuelto) return;
+    resuelto = true;
+    cancelAnimationFrame(rafId);
+
+    const acierto = clickeado && posActual >= zonaIzq && posActual <= (zonaIzq + zonaAncho);
+
+    overlay.classList.add(acierto ? "acierto" : "fallo");
+
+    setTimeout(()=>{
+      overlay.remove();
+      callback(acierto ? resultadoExito : resultadoFallo);
+    }, 500);
+  }
+
+  document.getElementById(idBoton).onclick = ()=>{
+    const posActual = parseFloat(indicadorEl.style.left) || 0;
+    resolver(true, posActual);
+  };
+
+  rafId = requestAnimationFrame(frame);
+}
+
+function mostrarMinijuegoGol(probGol, callback){
+  mostrarMinijuego({
+    probExito: probGol,
+    media: jugador.media,
+    eyebrow: "¡Chance de gol!",
+    subtitulo: 'Tocá "¡REMATAR!" cuando el indicador esté en la zona verde',
+    textoBoton: "¡REMATAR!",
+    idBoton: "btn-rematar",
+    resultadoExito: "gol",
+    resultadoFallo: "asistencia",
+    callback
+  });
+}
+
+// Minijuego del arquero: mismo mecanismo pero para atajar. Si tenés menos
+// media, la zona verde es más angosta (menos chances de ganar el minijuego)
+// y si lo perdés, es gol del rival, claramente.
+function mostrarMinijuegoAtajada(probAtajar, callback){
+  mostrarMinijuego({
+    probExito: probAtajar,
+    media: jugador.media,
+    eyebrow: "¡Chance del rival!",
+    subtitulo: 'Tocá "¡ATAJAR!" cuando el indicador esté en la zona verde',
+    textoBoton: "¡ATAJAR!",
+    idBoton: "btn-atajar",
+    resultadoExito: "atajada",
+    resultadoFallo: "gol",
+    callback
+  });
+}
+
+/* ---------- SEGUNDO MINIJUEGO: ELEGIR DIRECCIÓN ---------- */
+// Variante del minijuego: en vez de frenar una barra, elegís hacia dónde
+// va la pelota (izquierda / al medio / derecha). Es más simple y rápido,
+// y se alterna al azar con el minijuego de la barra para darle variedad
+// al partido.
+function mostrarMinijuegoDireccion(config){
+  const { probExito, eyebrow, subtitulo, resultadoExito, resultadoFallo, callback } = config;
+
+  const overlay = document.createElement("div");
+  overlay.className = "minijuego-overlay";
+  overlay.innerHTML = `
+    <div class="minijuego-card">
+      <span class="eyebrow">${eyebrow}</span>
+      <h3>${subtitulo}</h3>
+      <div class="direccion-grid">
+        <button class="opcion-btn direccion-btn" data-dir="izquierda">⬅️<br>Izquierda</button>
+        <button class="opcion-btn direccion-btn" data-dir="centro">⬆️<br>Al medio</button>
+        <button class="opcion-btn direccion-btn" data-dir="derecha">➡️<br>Derecha</button>
+      </div>
+      <div class="timer-barra"><div class="timer-relleno" id="timer-relleno-direccion"></div></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const timerEl = document.getElementById("timer-relleno-direccion");
+  const inicio = performance.now();
+  const duracionTotal = 3000; // mismo tiempo que el minijuego de la barra
+
+  let resuelto = false;
+  let rafId;
+
+  function frame(ahora){
+    const transcurrido = ahora - inicio;
+    const progreso = Math.min(1, transcurrido / duracionTotal);
+    timerEl.style.width = (100 - progreso * 100) + "%";
+
+    if(transcurrido >= duracionTotal){
+      resolver(false); // se te acabó el tiempo: no llegaste a elegir
+      return;
+    }
+
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function resolver(elegiste, btnElegido){
+    if(resuelto) return;
+    resuelto = true;
+    cancelAnimationFrame(rafId);
+
+    overlay.querySelectorAll(".direccion-btn").forEach(b=> b.disabled = true);
+
+    // Si llegaste a elegir, se resuelve con la probabilidad de la jugada;
+    // si se acabó el tiempo sin elegir, es fallo directo (te quitan la
+    // pelota, o en el caso del arquero, gol del rival).
+    const acierto = elegiste && (randInt(1,100) <= probExito);
+
+    if(btnElegido){
+      btnElegido.classList.add("selected", acierto ? "acierto" : "fallo");
+    }
+    overlay.classList.add(acierto ? "acierto" : "fallo");
+
+    setTimeout(()=>{
+      overlay.remove();
+      callback(acierto ? resultadoExito : resultadoFallo);
+    }, 550);
+  }
+
+  overlay.querySelectorAll(".direccion-btn").forEach(btn=>{
+    btn.onclick = ()=>{
+      if(resuelto) return;
+      resolver(true, btn);
+    };
+  });
+
+  rafId = requestAnimationFrame(frame);
+}
+
+// A diferencia del minijuego de la barra (que depende de posición y media),
+// acá la probabilidad es fija: 60% de meterla si elegís a tiempo.
+function mostrarMinijuegoGolDireccion(probGol, callback){
+  mostrarMinijuegoDireccion({
+    probExito: 60,
+    eyebrow: "¡Chance de gol!",
+    subtitulo: "Elegí para dónde patear",
+    resultadoExito: "gol",
+    resultadoFallo: "asistencia",
+    callback
+  });
+}
+
+// Variante de dirección para el arquero: elegís para dónde tirarte.
+// Probabilidad fija de 60% de adivinar el lado (si elegís a tiempo).
+function mostrarMinijuegoAtajadaDireccion(probAtajar, callback){
+  mostrarMinijuegoDireccion({
+    probExito: 60,
+    eyebrow: "¡Chance del rival!",
+    subtitulo: "Elegí para dónde tirarte",
+    resultadoExito: "atajada",
+    resultadoFallo: "gol",
+    callback
+  });
+}
+
+// Cuando termina el partido en vivo: calcula la nota, actualiza al
+// jugador y muestra la pantalla de resultado (igual que antes).
+function finalizarPartidoEnVivo(plan, g1, g2, goles, asistencias, atajadas, golesRecibidos){
+  const golesMiEquipo = plan.golesMiEquipo;
+  // Si sos arquero, los goles del rival salen de lo que pasó en los
+  // minijuegos de atajada (no del número fijo calculado antes del partido).
+  const golesRival = jugador.posicion === "Arquero" ? golesRecibidos : plan.golesRival;
+
+  let nota;
+
+  if(jugador.posicion === "Arquero"){
+    // Para el arquero la nota se basa sobre todo en lo que hizo en la
+    // cancha (cuánto atajó, cuántos goles le hicieron), no en la media:
+    // si atajó todo tiene que reflejarse en la nota aunque tenga media baja.
+    // La media sigue influyendo, pero poco.
+    nota = 5.5;
+    nota += (atajadas || 0) * 0.55;
+    nota -= golesRival * 0.5;
+    nota += (jugador.media - 60) * 0.02;
+    if(golesRival === 0 && atajadas > 0) nota += 0.8;
+  } else {
+    nota = 5.0 + ((jugador.media - 60) * 0.075);
+    nota += goles * 1.1;
+    nota += asistencias * 0.8;
+
+    if(golesMiEquipo > golesRival) nota += 0.5;
+    else if(golesMiEquipo === golesRival) nota += 0.2;
+    else nota -= 0.4;
+
+    if(jugador.posicion === "Defensor"){
+      if(golesRival <= 1) nota += 0.5;
+    } else if(jugador.posicion === "Mediocampista"){
+      nota += asistencias * 0.2;
+    } else if(jugador.posicion === "Delantero"){
+      nota += goles * 0.3;
+    }
+  }
+
+  nota += (Math.random() * 0.8 - 0.4);
+  nota = Math.round(Math.max(3.0, Math.min(10.0, nota)) * 10) / 10;
+
+  jugador.partidos++;
+  jugador.goles += goles;
+  jugador.asistencias += asistencias;
+  jugador.atajadas += (atajadas || 0);
+
+  if(nota >= 8.6){ jugador.media += 1; jugador.mvp++; }
+
+  let cambioMedia = 0;
+  if(nota >= 7){ jugador.media += 2; cambioMedia = 2; }
+  else if(nota < 6.3){ jugador.media -= 1; cambioMedia = -1; }
+
+  clampMedia();
+  notaActual = nota;
+
+  const resultado = { rival: plan.rival, miEquipo: golesMiEquipo, rivalGoles: golesRival, goles, asistencias, atajadas: (atajadas || 0), nota, cambioMedia };
+
+  mostrarResultadoFinalPartido(resultado, g1, g2);
+}
+
+/* =========================================================
+   EVENTOS (1 a 22, réplica de eventos.py)
+   ========================================================= */
+function otroClub(j){ return j.club === "Pingu FC" ? "Wachines FC" : "Pingu FC"; }
+
+const EVENTOS = {
+  1: { emoji:"🥗", titulo:"El nutricionista", texto:"El nutricionista te ofrece una dieta estricta.",
+    opciones:[
+      { label:"Aceptarla", icono:"🥗", run:(j)=>{ if(randInt(1,100) <= 75){ j.media+=4; return "Te sentis mejor fisicamente. (+4 de media)"; }
+          return "No notaste cambios";
+        }},
+      { label:"Comer lo que quieras", icono:"🍕", run:(j)=>{ j.media-=2; return "Disfrutaste la comida, pero no fue la mejor decisión. (-2 de media)"; } }
+    ]},
+  2: { emoji:"🏋️", titulo:"Entrenamiento extra", texto:"Hay entrenamiento extra en la costa.",
+    opciones:[
+      { label:"Ir", icono:"🏃", run:(j)=>{
+          if(randInt(1,100) <= 60){ j.media+=4; return "Entrenaste muy bien. (+4 de media)"; }
+          j.media-=2; return "Te caiste y te lastimaste pelotudo. (-2 de media)";
+        }},
+      { label:"Descansar", icono:"😴", run:(j)=>{ return "Vago de mierda"; } }
+    ]},
+  3: { emoji:"😡", titulo:"La hinchada", texto:"La hinchada te espera a la salida del entrenamiento. Te exigen que pongas huevos.",
+    opciones:[
+      { label:"Enfrentarlos", icono:"😤", run:(j)=>{
+          if(randInt(1,100) <= 60){ j.media+=1; return "Los convenciste con tus palabras. (+1 de media)"; }
+          j.media-=2; return "La situación empeoró. (-2 de media)";
+        }},
+      { label:"Pedir disculpas", icono:"🙏", run:(j)=>{ j.media+=1; return "Prometiste levantar el nivel. (+1 de media)"; } },
+      { label:"Ignorarlos", icono:"🙄", run:(j)=>{ return "Que la chupen."; } }
+    ]},
+  4: { emoji:"💊", titulo:"Preparador físico", texto:"Un preparador físico te ofrece una sustancia para rendir más.",
+    opciones:[
+      { label:"Aceptar", icono:"💊", run:(j)=>{
+          if(randInt(1,100) <= 57){ j.media+=5; return "Funcionó... por ahora. (+5 de media)"; }
+          j.media-=6; return "¡¡Te descubrieron en un control antidoping!! Te cortaron las piernas como al Diego. (-6 de media)";
+        }},
+      { label:"Rechazar", icono:"🚫", run:(j)=>{ return "Elegiste competir limpiamente."; } }
+    ]},
+  5: { emoji:"🎮", titulo:"Noche de TikTok", texto:"Pasaste toda la noche jugando y boludeando en TikTok.",
+    opciones:[
+      { label:"Dormir igual", icono:"😴", run:(j)=>{ j.media+=2; return "Llegaste descansado. (+2 de media)"; } },
+      { label:"Seguir jugando", icono:"📱", run:(j)=>{ j.media-=3; return "Llegaste cansado al entrenamiento. (-3 de media)"; } }
+    ]},
+  6: { emoji:"📨", titulo:"Oferta de fichaje", texto:(j)=>`${otroClub(j)} quiere ficharte.`,
+    opciones:[
+      { label:"Aceptar", icono:"✍️", run:(j)=>{ j.club = otroClub(j); return "Cambiaste de club. Traidor de mierda"; } },
+      { label:"Rechazar", icono:"🛡️", run:(j)=>{ return "Seguís en tu equipo."; } }
+    ]},
+  7: { emoji:"🤝", titulo:"Práctica extra", texto:"Un compañero quiere practicar después del entrenamiento.",
+    opciones:[
+      { label:"Aceptar", icono:"🤝", run:(j)=>{ j.media+=4; return "Mejoró tu conexión con el equipo. (+4 de media)"; } },
+      { label:"Irte a tu casa", icono:"🚪", run:(j)=>{ return "Andaaa amargo"; } }
+    ]},
+  8: { emoji:"🎉", titulo:"Joda antes del partido", texto:"Te invitan a una joda antes del partido.",
+    opciones:[
+      { label:"Ir", icono:"🎉", run:(j)=>{ j.media-=4; return "No llegaste al 100% físicamente. (-4 de media)"; } },
+      { label:"Quedarte en casa", icono:"🏠", run:(j)=>{ j.media+=1; return "Tomaste una buena decisión. (+1 de media)"; } }
+    ]},
+  9: { emoji:"⚽", titulo:"Tiros libres", texto:"Te quedás practicando tiros libres.",
+    auto:(j)=>{ j.media+=2; return "GENIO! (+2 de media)"; } },
+  10:{ emoji:"👟", titulo:"Botines Nuevos", texto:"Te quieren regalar unos botines nuevos",
+    opciones:[
+      { label:"Aceptar", icono:"🙌", run:(j)=>{
+          if(randInt(1,100) <= 55){ j.media+=1; return "Están flama, Jugarás más cómodo. (+1 de media)"; }
+          j.media-=1; return "Son una verga los botines, jugarás re incómodo (-1 de media)";
+        }},
+      { label:"No gracias", icono:"🙅", run:(j)=>{ return "Chupala."; } }
+    ]},
+  11:{ emoji:"🤕", titulo:"Molestia muscular", texto:"Sufrís una pequeña molestia muscular. Que mala leche",
+    auto:(j)=>{ j.media-=3; return "(-3 de media)"; } },
+  12:{ emoji:"🍔", titulo:"Comida rápida", texto:"Te ofrecen comida rápida.",
+    opciones:[
+      { label:"Comer", icono:"🍔", run:(j)=>{ j.media-=3; return "Gordo de mierda (-3 de media)"; } },
+      { label:"No comer", icono:"🥦", run:(j)=>{ return "Bien."; } }
+    ]},
+  13:{ emoji:"❤️", titulo:"Una mina que te gusta", texto:"Conocés a una mina que te gusta.",
+    opciones:[
+      { label:"Invitarla a salir", icono:"❤️", run:(j)=>{
+          if(randInt(1,100) <= 70){ j.media+=3; return "La cita salió muy bien. Te sentís más motivado. (+3 de media)"; }
+          j.media-=1; return "Te re cortó el rostro. Te costó concentrarte unos días. (-1 de media)";
+        }},
+      { label:"Concentrarte en el fútbol", icono:"⚽", run:(j)=>{ return "Decidiste enfocarte completamente en el fútbol. Virgo."; } }
+    ]},
+  14:{ emoji:"🏋️", titulo:"Dolor en el entrenamiento", texto:"En un entrenamiento sentís un dolor fuerte.",
+    opciones:[
+      { label:"Seguir entrenando", icono:"💪", run:(j)=>{
+          if(randInt(1,100) <= 40){ j.media-=4; return "Cagaste, La lesión empeoró. (-4 de media)"; }
+          j.media+=2; return "Terminaste el entrenamiento sin problemas. (+2 de media)";
+        }},
+      { label:"Parar inmediatamente", icono:"🛑", run:(j)=>{
+          if(randInt(1,100) <= 65){ j.media+=1; return "El médico confirmó que fue una buena decisión. (+1 de media)"; }
+          return "Era solo una molestia.";
+        }}
+    ]},
+  15:{ emoji:"💰", titulo:"Timba", texto:"Un amigo te propone timbear.",
+    opciones:[
+      { label:"Apostar", icono:"🎲", run:(j)=>{
+          if(randInt(1,100) <= 30){ j.media+=3; return "Ganaste la apuesta, qué pijudo. (+3 de media)"; }
+          j.media-=2; return "Perdiste la apuesta. (-2 de media)";
+        }},
+      { label:"No apostar", icono:"🙅", run:(j)=>{ j.media-=1; return "Te bajó la media por cagón. (-1 de media)"; } }
+    ]},
+  16:{ emoji:"🤬📨", titulo:"Se picó todo", texto:(j)=>`Te llevas mal con tus compañeros y puedes salir a ${otroClub(j)} que quiere ficharte.`,
+    opciones:[
+      { label:"Salir", icono:"✍️", run:(j)=>{ j.club = otroClub(j); return "Cambiaste de club."; } },
+      { label:"Me quedo", icono:"🛡️", run:(j)=>{j.media-=2;return "Seguís en tu equipo. Pero no estás cómodo (-2 de media)"; } }
+    ]},
+  17:{ emoji:"📚", titulo:"Prueba de filosofía", texto:"Tenés una prueba de filosofía el mismo día del partido.",
+    opciones:[
+      { label:"Estudiar", icono:"📖", run:(j)=>{ j.media-=1; return "Aprobaste, pero llegaste un poco cansado. (-1 de media)"; } },
+      { label:"Pensar solo en el partido", icono:"⚽", run:(j)=>{ j.media+=3; return "Jugaste más concentrado, pero desaprobaste. (+3 de media)"; } }
+    ]},
+  18:{ emoji:"⚽", titulo:"Picado en el recreo", texto:"En el recreo organizan un picado.",
+    opciones:[
+      { label:"Jugar", icono:"⚽", run:(j)=>{
+          if(randInt(1,100) <= 40){ j.media-=2; return "Recibiste un golpe fuerte. (-2 de media)"; }
+          j.media+=1; return "Metiste varios goles. (+1 de media)";
+        }},
+      { label:"Descansar", icono:"🛋️", run:(j)=>{ j.media+=2; return "Guardaste energías para el torneo. (+2 de media)"; } }
+    ]},
+  19:{ emoji:"👕", titulo:"Camiseta de Tim Payne", texto:"Tenés en tu casa una camiseta de Tim Payne para jugar.",
+    opciones:[
+      { label:"Llevar al colegio", icono:"👕", run:(j)=>{
+          if(randInt(1,100) <= 60){ j.media+=2; return "Farmeaste aura, papá 💯 (+2 de media)"; }
+          j.media-=1; return "Te cagó a pedo la gorra. (-1 de media)";
+        }},
+      { label:"Dejarla", icono:"🙅", run:(j)=>{ return "Chupala."; } }
+    ]},
+  20:{ emoji:"😡", titulo:"Pelea con un compañero", texto:"Te peleás con un compañero.",
+    opciones:[
+      { label:"Responder", icono:"👊", run:(j)=>{
+          if(randInt(1,100) <= 60){ j.media-=4; return "Se pudrió y se cagaron a piñas. (-4 de media)"; }
+          j.media+=1; return "Te ganaste el respeto. (+1 de media)";
+        }},
+      { label:"Ignorarlo", icono:"🚶", run:(j)=>{ return "Arrugaste."; } }
+    ]},
+  21:{ emoji:"📢", titulo:"La chiqui quiere hablar", texto:"La chiqui quiere hablar con vos.",
+    opciones:[
+      { label:"Ir", icono:"🚶", run:(j)=>{
+          if(randInt(1,100) <= 60){ j.media+=1; return "Te dijo una boludez y volviste tranquilo. (+1 de media)"; }
+          j.media-=1; return "Te cagaron a pedo. (-1 de media)";
+        }},
+      { label:"Inventar una excusa", icono:"🤥", run:(j)=>{
+          if(randInt(1,100) <= 70){ j.media-=2; return "Te amonestaron por hacerte el choro. (-2 de media)"; }
+          return "No se dió cuenta jajajaj.";
+        }}
+    ]},
+  22:{ emoji:"🥸", titulo:"El profe Becerra", texto:"Tu equipo compró al profe Becerra para que les incline la cancha.",
+    auto:(j)=>{ j.media+=2; return "Jugás más motivado. (+2 de media)"; } },
+  23:{ emoji:"💦", titulo:"Sin Botella De agua", texto:"No trajiste agua a Ed. Fisica que boludo",
+    opciones:[
+      { label:"Tomar de la botella de otro", icono:"🤫", run:(j)=>{
+          if(randInt(1,100) <= 75){ j.media+=1; return "te vas a hidratar correctamente (+1 de media)"; }
+          j.media-=1; return "Te pegaron un trompadón porque el dueño de la botella estaba loquito. (-1 de media)";
+        }},
+      { label:"bancarme la sed", icono:"💪", run:(j)=>{
+          if(randInt(1,100) <= 33){ j.media-=2; return "Se te bajó la presión (-2 de media)"; }
+          return "Te la bancas";
+        }}
+    ]},
+  24:{ emoji:"🎤", titulo:"Conferencia de prensa", texto:"Asistirás a la conferencia de prensa?",
+    opciones:[
+      { label:"Si", icono:"👍", run:(j)=>{
+          if(randInt(1,100) <= 67){ j.media+=1; return "tus palabras gustaron y sentís el apoyo de la gente (+1 de media)"; }
+          j.media-=1; return "tus palabras no gustaron y sentís el rechazo de la gente. (-1 de media)";
+        }},
+      { label:"No alta paja", icono:"👎", run:(j)=>{
+          if(randInt(1,100) <= 75){ j.media-=1; return "A la gente no le gusto y esta enojada con vos(-1 de media)"; }
+          return "No te dijieron nada";
+        }}
+    ]},
+  25: { emoji:"📨", titulo:"Oferta de fichaje", texto:(j)=>`${otroClub(j)} quiere ficharte.`,
+    opciones:[
+      { label:"Aceptar", icono:"✍️", run:(j)=>{ j.club = otroClub(j); return "Cambiaste de club. Traidor de mierda"; } },
+      { label:"Rechazar", icono:"🛡️", run:(j)=>{ return "Seguís en tu equipo."; } }
+    ]},
+  26:{ emoji:"🧍‍♂️", titulo:"Cambio de Posición", texto:"Tus compañeros te piden que cambies de posicion para mejorar el esquema",
+    opciones:[
+      { label:"Aceptar", icono:"👍", run:(j)=>{
+          if(randInt(1,100) <= 60){ j.media+=1; return "Te adaptaste y el equipo juega mejor (+1 de media)"; }
+          j.media-=1; return "Estás más incómodo en ese sector. (-1 de media)";
+        }},
+      { label:"Rechazar", icono:"👎", run:(j)=>{
+          if(randInt(1,100) <= 80){ j.media-=1; return "A tus compañeros no les gustó (-1 de media)"; }
+          return "Te supieron entender";
+        }}
+    ]},
+};
+
+/* =========================================================
+   RENDER HELPERS
+   ========================================================= */
+function actualizarScoreboard(){
+  document.getElementById("sb-jornada").textContent = `SEMANA ${semana}/${TOTAL_SEMANAS}`;
+
+  const crestImg = {"Pingu FC":"pingu.png", "Wachines FC":"wachin.jpeg"};
+  const tabla = [
+    { club:"Pingu FC", gf:gfPingu, gc:gcPingu, pts:puntosPingu },
+    { club:"Wachines FC", gf:gfWachines, gc:gcWachines, pts:puntosWachines }
+  ];
+
+  tabla.sort((a,b)=>{
+    if(b.pts !== a.pts) return b.pts - a.pts;
+    return (b.gf - b.gc) - (a.gf - a.gc);
+  });
+
+  const cuerpo = document.getElementById("tabla-posiciones-body");
+  cuerpo.innerHTML = tabla.map(fila=>{
+    const dif = fila.gf - fila.gc;
+    const difTexto = dif > 0 ? `+${dif}` : `${dif}`;
+    const esMiClub = jugador && jugador.club === fila.club;
+    return `
+      <tr class="${esMiClub ? "mi-club" : ""}">
+        <td class="col-club"><div class="crest"><img src="${crestImg[fila.club]}" alt="${fila.club}"></div><span>${fila.club}</span></td>
+        <td>${fila.gf}</td>
+        <td>${fila.gc}</td>
+        <td>${difTexto}</td>
+        <td class="pts">${fila.pts}</td>
+      </tr>
+    `;
+  }).join("");
+}
+
+/* ---------- PANTALLA 0: INICIO ---------- */
+function pantallaInicio(){
+  scoreboardEl.classList.remove("visible");
+  screen.innerHTML = `
+    <div class="hero">
+      <div class="marca">PINGU<br><span>CUP</span></div>
+      <div class="sub">Creá tu jugador y jugá la temporada</div>
+    </div>
+    <div class="card">
+      <span class="eyebrow">Paso 1</span>
+      <h2>Nombre del jugador</h2>
+      <input type="text" id="input-nombre" placeholder="Ej: Mibul Toso" maxlength="20">
+
+      <label class="field-label">Elegí una nacionalidad</label>
+      <div class="fila-pais">
+        <img id="preview-bandera" class="bandera-img" style="display:none;">
+        <select class="select-pais" id="select-nacionalidad">
+          <option value="">-- Elegí un país --</option>
+        </select>
+      </div>
+
+      <label class="field-label">Elegí una posición</label>
+      <div class="opciones-grid" id="grid-posiciones"></div>
+
+      <label class="field-label">Elegí un club</label>
+      <div class="opciones-grid" id="grid-clubes"></div>
+
+      <button class="btn-principal" id="btn-crear" disabled>Crear jugador</button>
+    </div>
+  `;
+
+  const selectNacionalidad = document.getElementById("select-nacionalidad");
+  const previewBandera = document.getElementById("preview-bandera");
+  PAISES.forEach(([codigo, nombre])=>{
+    const opt = document.createElement("option");
+    opt.value = codigo;
+    opt.textContent = nombre;
+    selectNacionalidad.appendChild(opt);
+  });
+
+  selectNacionalidad.addEventListener("change", ()=>{
+    if(selectNacionalidad.value){
+      previewBandera.src = urlBandera(selectNacionalidad.value, 80);
+      previewBandera.style.display = "block";
+    } else {
+      previewBandera.style.display = "none";
+    }
+  });
+
+  const gridPos = document.getElementById("grid-posiciones");
+  let posSel = null, clubSel = null;
+
+  POSICIONES.forEach(p=>{
+    const b = document.createElement("button");
+    b.className = "opcion-btn";
+    b.innerHTML = `<span class="emoji">${POSICION_EMOJI[p]}</span> ${p}`;
+    b.onclick = ()=>{
+      gridPos.querySelectorAll(".opcion-btn").forEach(x=>x.classList.remove("selected"));
+      b.classList.add("selected");
+      posSel = p;
+      revisar();
+    };
+    gridPos.appendChild(b);
+  });
+
+  const gridClubes = document.getElementById("grid-clubes");
+  const crestImgSeleccion = {"Pingu FC":"pingu.png","Wachines FC":"wachin.jpeg"};
+  CLUBES.forEach(c=>{
+    const b = document.createElement("button");
+    b.className = "opcion-btn club-btn";
+    b.innerHTML = `<div class="crest big"><img src="${crestImgSeleccion[c]}" alt="${c}"></div><span>${c}</span>`;
+    b.onclick = ()=>{
+      gridClubes.querySelectorAll(".opcion-btn").forEach(x=>x.classList.remove("selected"));
+      b.classList.add("selected");
+      clubSel = c;
+      revisar();
+    };
+    gridClubes.appendChild(b);
+  });
+
+  const btnCrear = document.getElementById("btn-crear");
+  const inputNombre = document.getElementById("input-nombre");
+  inputNombre.addEventListener("input", revisar);
+  selectNacionalidad.addEventListener("change", revisar);
+
+  function revisar(){
+    btnCrear.disabled = !(inputNombre.value.trim().length > 0 && posSel && clubSel && selectNacionalidad.value);
+  }
+
+  btnCrear.onclick = ()=>{
+    const codigoPais = selectNacionalidad.value;
+    const nombrePais = PAISES.find(p => p[0] === codigoPais)[1];
+    jugador = crearJugador(inputNombre.value.trim(), posSel, clubSel, nombrePais, codigoPais);
+    pantallaFicha();
+  };
+}
+
+/* ---------- PANTALLA 1: FICHA DEL JUGADOR ---------- */
+function pantallaFicha(){
+  screen.innerHTML = `
+    <div class="card">
+      <span class="eyebrow">Tu jugador</span>
+      <h1>${jugador.nombre}</h1>
+      <div class="stat-linea"><span>Nacionalidad</span><b><img class="bandera-img chica" src="${urlBandera(jugador.paisCodigo)}"> ${jugador.nacionalidad}</b></div>
+      <div class="stat-linea"><span>Edad</span><b>${jugador.edad}</b></div>
+      <div class="stat-linea"><span>Posición</span><b>${POSICION_EMOJI[jugador.posicion]} ${jugador.posicion}</b></div>
+      <div class="stat-linea"><span>Club</span><b>${jugador.club}</b></div>
+      <div class="stat-linea"><span>Media</span><b>${jugador.media}</b></div>
+      <button class="btn-principal" id="btn-empezar">Comenzar la Pingu Cup</button>
+    </div>
+  `;
+  document.getElementById("btn-empezar").onclick = ()=>{
+    semana = 1;
+    puntosPingu = 0;
+    puntosWachines = 0;
+    gfPingu = 0; gcPingu = 0;
+    gfWachines = 0; gcWachines = 0;
+    scoreboardEl.classList.add("visible");
+    actualizarScoreboard();
+    iniciarSemana();
+  };
+}
+
+/* ---------- PANTALLA 2: EVENTO DE LA SEMANA ---------- */
+function iniciarSemana(){
+  actualizarScoreboard();
+  mostrarEvento();
+}
+
+function mostrarEvento(){
+  const id = randInt(1, 26);
+  //cambio evento
+
+  // El evento de la hinchada (id 3) solo puede aparecer si la nota del
+  // último partido fue menor a 6.5. Si fue 6.5 o más, se saltea.
+  if(id === 3 && notaActual >= 6.5){
+    continuarSinEvento();
+    return;
+  }
+
+  const ev = EVENTOS[id];
+  const textoEv = typeof ev.texto === "function" ? ev.texto(jugador) : ev.texto;
+
+  if(ev.auto){
+    const resultado = ev.auto(jugador);
+    clampMedia();
+    renderResultadoEvento(ev.emoji, ev.titulo, textoEv, resultado);
+    return;
+  }
+
+  const opcionesHtml = ev.opciones.map((op, idx)=>
+    `<button class="opcion-btn" data-idx="${idx}"><span class="emoji">${op.icono || "▫️"}</span> ${op.label}</button>`
+  ).join("");
+
+  screen.innerHTML = `
+    <div class="card">
+      <span class="eyebrow">Semana ${semana}/${TOTAL_SEMANAS} · Evento</span>
+      <h3>${ev.emoji} ${ev.titulo}</h3>
+      <p>${textoEv}</p>
+      <div class="opciones-grid" style="grid-template-columns:1fr;">${opcionesHtml}</div>
+    </div>
+  `;
+
+  screen.querySelectorAll(".opcion-btn").forEach(btn=>{
+    btn.onclick = ()=>{
+      const idx = parseInt(btn.dataset.idx, 10);
+      const resultado = ev.opciones[idx].run(jugador);
+      clampMedia();
+      renderResultadoEvento(ev.emoji, ev.titulo, textoEv, resultado);
+    };
+  });
+}
+
+function renderResultadoEvento(emoji, titulo, textoEv, resultadoTexto){
+  screen.innerHTML = `
+    <div class="card">
+      <span class="eyebrow">Semana ${semana}/${TOTAL_SEMANAS} · Evento</span>
+      <h3>${emoji} ${titulo}</h3>
+      <p>${textoEv}</p>
+      <p><b>${resultadoTexto}</b></p>
+      <div class="stat-linea"><span>Media actual</span><b>${jugador.media}</b></div>
+      <button class="btn-principal" id="btn-jugar-partido">Jugar el partido de la semana</button>
+    </div>
+  `;
+  document.getElementById("btn-jugar-partido").onclick = jugarPartidoDeLaSemana;
+}
+
+function continuarSinEvento(){
+  screen.innerHTML = `
+    <div class="card">
+      <span class="eyebrow">Semana ${semana}/${TOTAL_SEMANAS} · Sin novedades</span>
+      <h3>😌 Semana tranquila</h3>
+      <p>Veniste de una gran nota en el partido anterior y esta semana no pasó nada especial.</p>
+      <button class="btn-principal" id="btn-jugar-partido">Jugar el partido de la semana</button>
+    </div>
+  `;
+  document.getElementById("btn-jugar-partido").onclick = jugarPartidoDeLaSemana;
+}
+
+/* ---------- PANTALLA 3: RESULTADO DEL PARTIDO ---------- */
+function mostrarResultadoFinalPartido(resultado, g1, g2){
+  gfPingu += g1; gcPingu += g2;
+  gfWachines += g2; gcWachines += g1;
+
+  let badge;
+  if(resultado.miEquipo > resultado.rivalGoles){
+    badge = `<span class="badge-resultado badge-gano">GANÓ TU EQUIPO</span>`;
+    if(jugador.club === "Pingu FC") puntosPingu += 3; else puntosWachines += 3;
+  } else if(resultado.miEquipo < resultado.rivalGoles){
+    badge = `<span class="badge-resultado badge-perdio">PERDIÓ TU EQUIPO</span>`;
+    if(jugador.club === "Pingu FC") puntosWachines += 3; else puntosPingu += 3;
+  } else {
+    badge = `<span class="badge-resultado badge-empato">EMPATE</span>`;
+    puntosPingu += 1; puntosWachines += 1;
+  }
+
+  actualizarScoreboard();
+
+  const cambioClase = resultado.cambioMedia > 0 ? "sube" : (resultado.cambioMedia < 0 ? "baja" : "");
+  const cambioTexto = resultado.cambioMedia > 0 ? `+${resultado.cambioMedia}` : (resultado.cambioMedia < 0 ? `${resultado.cambioMedia}` : "sin cambios");
+
+  const esUltima = semana === TOTAL_SEMANAS;
+
+  const esArquero = jugador.posicion === "Arquero";
+  const statsRendimiento = esArquero
+    ? `<div class="stat-linea"><span>🧤 Atajadas</span><b>${resultado.atajadas}</b></div>`
+    : `
+      <div class="stat-linea"><span>⚽ Goles</span><b>${resultado.goles}</b></div>
+      <div class="stat-linea"><span>🎯 Asistencias</span><b>${resultado.asistencias}</b></div>
+    `;
+
+  screen.innerHTML = `
+    <div class="card">
+      <span class="eyebrow">Semana ${semana}/${TOTAL_SEMANAS} · Partido</span>
+      ${badge}
+      <div class="marcador">
+        <div class="equipo"><img src="pingu.png" alt="Pingu FC"><span>Pingu FC</span></div>
+        <div class="goles">${g1} - ${g2}</div>
+        <div class="equipo"><img src="wachin.jpeg" alt="Wachines FC"><span>Wachines FC</span></div>
+      </div>
+      <h2>Tu rendimiento</h2>
+      ${statsRendimiento}
+      <div class="stat-linea"><span>⭐ Nota</span><b>${resultado.nota}</b></div>
+      ${resultado.nota >= 8.6 ? '<h2 style="color:black;">🏅 ¡Fuiste el MVP del partido! (+1 de media) </h2>' : ''}
+      <div class="stat-linea"><span>Media</span><b class="media-cambio ${cambioClase}">${jugador.media} (${cambioTexto})</b></div>
+      <button class="btn-principal" id="btn-siguiente">${esUltima ? "Ver resultados finales" : "Siguiente semana"}</button>
+    </div>
+  `;
+
+  document.getElementById("btn-siguiente").onclick = avanzarSemana;
+}
+
+function avanzarSemana(){
+  semana++;
+  if(semana > TOTAL_SEMANAS){
+    pantallaFinal();
+  } else {
+    iniciarSemana();
+  }
+}
+
+/* ---------- PANTALLA 4: FINAL DE LA TEMPORADA ---------- */
+function pantallaFinal(){
+  scoreboardEl.classList.remove("visible");
+
+  let campeon;
+  if(puntosPingu > puntosWachines) campeon = "Pingu FC";
+  else if(puntosWachines > puntosPingu) campeon = "Wachines FC";
+  else campeon = "Empate";
+
+  if(jugador.club === campeon) jugador.titulos += 1;
+
+  const esArquero = jugador.posicion === "Arquero";
+
+  let premio;
+  if(jugador.mvp > 4) premio = "⭐ Mejor Jugador de la Pingu Cup";
+  else if(esArquero && jugador.atajadas >= 18) premio = "🧤 Mejor Arquero de la Pingu Cup";
+  else if(jugador.goles >= 6) premio = "🥇 Máximo Goleador";
+  else if(jugador.asistencias >= 5) premio = "🎯 Máximo Asistente";
+  else premio = "Sin premios individuales.";
+
+  const statsFinales = esArquero
+    ? `<div class="stat-linea"><span>Atajadas</span><b>${jugador.atajadas}</b></div>`
+    : `
+      <div class="stat-linea"><span>Goles</span><b>${jugador.goles}</b></div>
+      <div class="stat-linea"><span>Asistencias</span><b>${jugador.asistencias}</b></div>
+    `;
+
+  screen.innerHTML = `
+    <div class="card" style="text-align:center;">
+      <span class="eyebrow">Final de la Pingu Cup</span>
+      <h1>🏆 Campeón: ${campeon}</h1>
+      <img src="trofeo.jpeg" width="220">
+    </div>
+    <div class="card">
+      <h2><img class="bandera-img chica" src="${urlBandera(jugador.paisCodigo)}"> ${jugador.nombre} · ${jugador.nacionalidad}</h2>
+      <span class="eyebrow">Tus estadísticas</span>
+      <div class="stat-linea"><span>Partidos</span><b>${jugador.partidos}</b></div>
+      ${statsFinales}
+      <div class="stat-linea"><span>MVP</span><b>${jugador.mvp}</b></div>
+      <div class="stat-linea"><span>Media final</span><b>${jugador.media}</b></div>
+      <div class="stat-linea"><span>Títulos</span><b>${jugador.titulos}</b></div>
+      <h2 style="margin-top:16px;">🏅 Premios</h2>
+      <p>${premio}</p>
+      <button class="btn-principal" id="btn-de-nuevo">Jugar de nuevo</button>
+    </div>
+  `;
+
+  document.getElementById("btn-de-nuevo").onclick = pantallaInicio;
+}
+
+/* =========================================================
+   ARRANQUE
+   ========================================================= */
+pantallaInicio();
+</script>
+</body>
+</html>
