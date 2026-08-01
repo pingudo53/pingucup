@@ -582,53 +582,59 @@ const POSICIONES = ["Arquero", "Defensor", "Mediocampista", "Delantero"];
 const POSICION_EMOJI = {"Arquero":"🧤","Defensor":"🛡️","Mediocampista":"🎯","Delantero":"⚽"};
 const TOTAL_SEMANAS = 12;
 
-// Listado de países (código ISO + nombre en español). La bandera se muestra
-// como imagen (flagcdn.com) armada a partir del código, con urlBandera().
+// Listado de países (código ISO + nombre en español), ordenado según el
+// ranking FIFA que me pasaste. La bandera se muestra como imagen
+// (flagcdn.com) armada a partir del código, con urlBandera(). Inglaterra,
+// Escocia, Gales e Irlanda del Norte usan los códigos especiales de
+// flagcdn para las 4 naciones del Reino Unido (gb-eng, gb-sct, gb-wls,
+// gb-nir), ya que no tienen código ISO propio.
 const PAISES = [
-  ["AR","Argentina"],["DZ","Argelia"],["AO","Angola"],["BJ","Benín"],["BW","Botsuana"],
-  ["BF","Burkina Faso"],["BI","Burundi"],["CV","Cabo Verde"],["CM","Camerún"],["CF","República Centroafricana"],
-  ["TD","Chad"],["KM","Comoras"],["CG","Congo"],["CD","República Democrática del Congo"],["CI","Costa de Marfil"],
-  ["DJ","Yibuti"],["EG","Egipto"],["GQ","Guinea Ecuatorial"],["ER","Eritrea"],["SZ","Esuatini"],
-  ["ET","Etiopía"],["GA","Gabón"],["GM","Gambia"],["GH","Ghana"],["GN","Guinea"],
-  ["GW","Guinea-Bisáu"],["KE","Kenia"],["LS","Lesoto"],["LR","Liberia"],["LY","Libia"],
-  ["MG","Madagascar"],["MW","Malaui"],["ML","Malí"],["MA","Marruecos"],["MU","Mauricio"],
-  ["MR","Mauritania"],["MZ","Mozambique"],["NA","Namibia"],["NE","Níger"],["NG","Nigeria"],
-  ["RW","Ruanda"],["ST","Santo Tomé y Príncipe"],["SN","Senegal"],["SC","Seychelles"],["SL","Sierra Leona"],
-  ["SO","Somalia"],["ZA","Sudáfrica"],["SS","Sudán del Sur"],["SD","Sudán"],["TZ","Tanzania"],
-  ["TG","Togo"],["TN","Túnez"],["UG","Uganda"],["ZM","Zambia"],["ZW","Zimbabue"],
+  ["AR","Argentina"],["FR","Francia"],["GB-ENG","Inglaterra"],["BR","Brasil"],["MA","Marruecos"],
+  ["PT","Portugal"],["BE","Bélgica"],["NL","Países Bajos"],["MX","México"],["ES","España"],
 
-  ["AG","Antigua y Barbuda"],["BS","Bahamas"],["BB","Barbados"],["BZ","Belice"],["BO","Bolivia"],
-  ["BR","Brasil"],["CA","Canadá"],["CL","Chile"],["CO","Colombia"],["CR","Costa Rica"],
-  ["CU","Cuba"],["DM","Dominica"],["EC","Ecuador"],["SV","El Salvador"],["US","Estados Unidos"],
-  ["GD","Granada"],["GT","Guatemala"],["GY","Guyana"],["HT","Haití"],["HN","Honduras"],
-  ["JM","Jamaica"],["MX","México"],["NI","Nicaragua"],["PA","Panamá"],["PY","Paraguay"],
-  ["PE","Perú"],["DO","República Dominicana"],["KN","San Cristóbal y Nieves"],["LC","Santa Lucía"],
-  ["VC","San Vicente y las Granadinas"],["SR","Surinam"],["TT","Trinidad y Tobago"],["UY","Uruguay"],["VE","Venezuela"],
+  ["CO","Colombia"],["DE","Alemania"],["HR","Croacia"],["CH","Suiza"],["IT","Italia"],
+  ["US","Estados Unidos"],["JP","Japón"],["SN","Senegal"],["NO","Noruega"],["UY","Uruguay"],
+  ["DK","Dinamarca"],["IR","Irán"],["AT","Austria"],["EG","Egipto"],["EC","Ecuador"],
+  ["AU","Australia"],["CA","Canadá"],["TR","Turquía"],["UA","Ucrania"],["PA","Panamá"],
+  ["PL","Polonia"],["GB-WLS","Gales"],["CR","Costa Rica"],["PY","Paraguay"],["DZ","Argelia"],
+  ["TN","Túnez"],["GB-SCT","Escocia"],["CI","Costa de Marfil"],["KR","Corea del Sur"],["SE","Suecia"],
+  ["CZ","República Checa"],["SK","Eslovaquia"],["RO","Rumania"],["UZ","Uzbekistán"],["QA","Catar"],
+  ["GR","Grecia"],["CL","Chile"],["VE","Venezuela"],["PE","Perú"],["SA","Arabia Saudita"],
 
-  ["AF","Afganistán"],["SA","Arabia Saudita"],["AM","Armenia"],["AZ","Azerbaiyán"],["BH","Baréin"],
-  ["BD","Bangladés"],["BT","Bután"],["MM","Birmania"],["BN","Brunéi"],["KH","Camboya"],
-  ["QA","Catar"],["CN","China"],["CY","Chipre"],["KP","Corea del Norte"],["KR","Corea del Sur"],
-  ["AE","Emiratos Árabes Unidos"],["PH","Filipinas"],["GE","Georgia"],["IN","India"],["ID","Indonesia"],
-  ["IQ","Irak"],["IR","Irán"],["IL","Israel"],["JP","Japón"],["JO","Jordania"],
-  ["KZ","Kazajistán"],["KG","Kirguistán"],["KW","Kuwait"],["LA","Laos"],["LB","Líbano"],
-  ["MY","Malasia"],["MV","Maldivas"],["MN","Mongolia"],["NP","Nepal"],["OM","Omán"],
-  ["PK","Pakistán"],["PS","Palestina"],["SG","Singapur"],["LK","Sri Lanka"],["SY","Siria"],
-  ["TH","Tailandia"],["TJ","Tayikistán"],["TL","Timor Oriental"],["TR","Turquía"],["TM","Turkmenistán"],
-  ["UZ","Uzbekistán"],["VN","Vietnam"],["YE","Yemen"],
+  ["ZA","Sudáfrica"],["IQ","Irak"],["IE","República de Irlanda"],["SI","Eslovenia"],["FI","Finlandia"],
+  ["AL","Albania"],["MK","Macedonia del Norte"],["JO","Jordania"],["BA","Bosnia y Herzegovina"],["NG","Nigeria"],
+  ["CM","Camerún"],["GH","Ghana"],["GB-NIR","Irlanda del Norte"],["IS","Islandia"],["JM","Jamaica"],
+  ["CV","Cabo Verde"],["GE","Georgia"],["BO","Bolivia"],["BF","Burkina Faso"],["CD","Congo (RD)"],
+  ["ML","Malí"],["OM","Omán"],["XK","Kosovo"],["AE","Emiratos Árabes Unidos"],["BH","Baréin"],
+  ["GN","Guinea"],["HN","Honduras"],["SV","El Salvador"],["CW","Curazao"],["HT","Haití"],
+  ["CN","China"],["SY","Siria"],["ZM","Zambia"],["GA","Gabón"],["UG","Uganda"],
+  ["NZ","Nueva Zelanda"],["IL","Israel"],["LU","Luxemburgo"],["GQ","Guinea Ecuatorial"],["AM","Armenia"],
+  ["BJ","Benín"],["BY","Bielorrusia"],["AO","Angola"],["TT","Trinidad y Tobago"],["MR","Mauritania"],
+  ["MZ","Mozambique"],["PS","Palestina"],["KG","Kirguistán"],["KZ","Kazajistán"],["TJ","Tayikistán"],
 
-  ["DE","Alemania"],["AD","Andorra"],["AT","Austria"],["BE","Bélgica"],["BY","Bielorrusia"],
-  ["BA","Bosnia y Herzegovina"],["BG","Bulgaria"],["CZ","Chequia"],["HR","Croacia"],["DK","Dinamarca"],
-  ["SK","Eslovaquia"],["SI","Eslovenia"],["ES","España"],["EE","Estonia"],["FI","Finlandia"],
-  ["FR","Francia"],["GR","Grecia"],["HU","Hungría"],["IE","Irlanda"],["IS","Islandia"],
-  ["IT","Italia"],["LV","Letonia"],["LI","Liechtenstein"],["LT","Lituania"],["LU","Luxemburgo"],
-  ["MT","Malta"],["MD","Moldavia"],["MC","Mónaco"],["ME","Montenegro"],["NO","Noruega"],
-  ["NL","Países Bajos"],["PL","Polonia"],["PT","Portugal"],["GB","Reino Unido"],["RO","Rumania"],
-  ["RU","Rusia"],["SM","San Marino"],["RS","Serbia"],["CH","Suiza"],["SE","Suecia"],
-  ["UA","Ucrania"],["VA","Ciudad del Vaticano"],["MK","Macedonia del Norte"],["AL","Albania"],
+  ["MG","Madagascar"],["TH","Tailandia"],["GT","Guatemala"],["KE","Kenia"],["TZ","Tanzania"],
+  ["GW","Guinea-Bisáu"],["NA","Namibia"],["CG","Congo"],["VN","Vietnam"],["LB","Líbano"],
+  ["IN","India"],["KP","Corea del Norte"],["TG","Togo"],["ZW","Zimbabue"],["LY","Libia"],
+  ["NE","Níger"],["SL","Sierra Leona"],["AZ","Azerbaiyán"],["EE","Estonia"],["CY","Chipre"],
+  ["GM","Gambia"],["SR","Surinam"],["RW","Ruanda"],["MW","Malaui"],["SD","Sudán"],
+  ["CF","República Centroafricana"],["KM","Comoras"],["NI","Nicaragua"],["MY","Malasia"],["ID","Indonesia"],
+  ["FO","Islas Feroe"],["KW","Kuwait"],["LV","Letonia"],["LT","Lituania"],["MD","Moldavia"],
+  ["TM","Turkmenistán"],["PH","Filipinas"],["BI","Burundi"],["ET","Etiopía"],["SB","Islas Salomón"],
+  ["KN","San Cristóbal y Nieves"],["AG","Antigua y Barbuda"],["BW","Botsuana"],["SZ","Esuatini"],["GF","Guayana Francesa"],
+  ["NC","Nueva Caledonia"],["LS","Lesoto"],
 
-  ["AU","Australia"],["FJ","Fiyi"],["KI","Kiribati"],["MH","Islas Marshall"],["FM","Micronesia"],
-  ["NR","Nauru"],["NZ","Nueva Zelanda"],["PW","Palaos"],["PG","Papúa Nueva Guinea"],["WS","Samoa"],
-  ["SB","Islas Salomón"],["TO","Tonga"],["TV","Tuvalu"],["VU","Vanuatu"]
+  ["DO","República Dominicana"],["YE","Yemen"],["LR","Liberia"],["HK","Hong Kong"],["AF","Afganistán"],
+  ["PR","Puerto Rico"],["PF","Tahití"],["SG","Singapur"],["GY","Guyana"],["MV","Maldivas"],
+  ["MM","Birmania"],["AD","Andorra"],["TW","Taiwán"],["VU","Vanuatu"],["PG","Papúa Nueva Guinea"],
+  ["SS","Sudán del Sur"],["FJ","Fiyi"],["LC","Santa Lucía"],["GD","Granada"],["CU","Cuba"],
+  ["BM","Bermudas"],["MT","Malta"],["VC","San Vicente y las Granadinas"],["MS","Montserrat"],["MU","Mauricio"],
+  ["BB","Barbados"],["KH","Camboya"],["DM","Dominica"],["BZ","Belice"],["ST","Santo Tomé y Príncipe"],
+  ["BD","Bangladés"],["NP","Nepal"],["MO","Macao"],["LA","Laos"],["MN","Mongolia"],
+  ["DJ","Yibuti"],["BN","Brunéi"],["AW","Aruba"],["SC","Seychelles"],["PK","Pakistán"],
+  ["TL","Timor Oriental"],["SO","Somalia"],["KY","Islas Caimán"],["LI","Liechtenstein"],["GI","Gibraltar"],
+  ["BS","Bahamas"],["GU","Guam"],["TC","Islas Turcas y Caicos"],["LK","Sri Lanka"],["VI","Islas Vírgenes de los EE. UU."],
+  ["VG","Islas Vírgenes Británicas"],["TD","Chad"],["AI","Anguila"],["BT","Bután"],["WS","Samoa"],
+  ["AS","Samoa Americana"],["TO","Tonga"],["SM","San Marino"],["ER","Eritrea"],["CK","Islas Cook"]
 ];
 
 function urlBandera(codigo, ancho){
@@ -643,7 +649,7 @@ function randInt(min, max){
 }
 
 /* =========================================================
-   ESTADO DEL JUGADOR
+   ESTADO DEL JUGADOR (65 media)
    ========================================================= */
 function crearJugador(nombre, posicion, club, nacionalidad, paisCodigo){
   return {
@@ -664,7 +670,12 @@ function crearJugador(nombre, posicion, club, nacionalidad, paisCodigo){
     rojas: 0,
     mvp: 0,
     promedio: 0,
-    titulos: 0
+    titulos: 0,
+    selPartidos: 0,
+    selGoles: 0,
+    selAsistencias: 0,
+    selAtajadas: 0,
+    selMVP: 0
   };
 }
 
@@ -725,9 +736,9 @@ function calcularPlanPartido(j){
     } else if(j.posicion === "Mediocampista"){
       participaciones = randInt(1, Math.min(maxParticipaciones, golesEquipo));
     } else if(j.posicion === "Defensor"){
-      participaciones = randInt(0, Math.min(2, maxParticipaciones));
+      participaciones = randInt(1, Math.min(2, maxParticipaciones));
     } else {
-      // El arquero no participa de las jugadas ofensivas: sus chances son de atajar.
+      // El arquero no participa de las jugadas ofensivas: sus chances son de atajar pito.
       participaciones = 0;
     }
     participaciones = Math.min(participaciones, golesEquipo);
@@ -798,6 +809,316 @@ function construirEventosPartido(plan, jugador){
 // Cuánto tarda (en ms reales) cada minuto simulado. Más rápido = partido
 // más corto de ver; se puede ajustar sin romper nada más.
 const VELOCIDAD_MINUTO_MS = 75;
+
+/* =========================================================
+   AMISTOSO CON LA SELECCIÓN
+   (PAISES ya está ordenado según el ranking FIFA que me pasaron,
+   así que el ranking de un país es directamente su posición en ese
+   array. Con eso se calcula una "fuerza" por selección y se arma un
+   partido lo más lógico posible según la diferencia de nivel.)
+   ========================================================= */
+function rankingPais(codigo){
+  const idx = PAISES.findIndex(p => p[0] === codigo);
+  return idx >= 0 ? idx + 1 : 120;
+}
+
+function fuerzaPorRanking(rank){
+  let f = 97 - (rank - 1) * 0.28;
+  return Math.max(38, Math.min(97, f));
+}
+
+function elegirRivalSeleccion(){
+  const candidatos = PAISES.filter(p => p[0] !== jugador.paisCodigo);
+  return candidatos[randInt(0, candidatos.length - 1)];
+}
+
+function calcularPlanPartidoSeleccion(j, rivalCodigo, rivalNombre){
+  const rankJugador = rankingPais(j.paisCodigo);
+  const rankRival = rankingPais(rivalCodigo);
+  const fuerzaJugador = fuerzaPorRanking(rankJugador);
+  const fuerzaRival = fuerzaPorRanking(rankRival);
+  const diff = fuerzaJugador - fuerzaRival;
+
+  // Goles esperados de cada selección según la diferencia de nivel
+  // (no es un puntaje fijo: se le suma variación al azar para que el
+  // resultado no sea siempre el mismo entre dos selecciones parecidas).
+  function simGoles(esperado){
+    const variacion = (Math.random() - 0.5) * 2.2;
+    return Math.max(0, Math.round(esperado + variacion));
+  }
+
+  const esperadoPropio = Math.max(0.25, Math.min(3.4, 1.45 + diff * 0.03));
+  const esperadoRival = Math.max(0.25, Math.min(3.4, 1.45 - diff * 0.03));
+
+  const golesMiEquipo = simGoles(esperadoPropio);
+  const golesRival = simGoles(esperadoRival);
+  const golesEquipo = golesMiEquipo;
+
+  let participaciones = 0;
+  let probGol = 40;
+
+  if(golesEquipo > 0){
+    let maxParticipaciones;
+    if(j.media >= 90) maxParticipaciones = golesEquipo;
+    else if(j.media >= 85) maxParticipaciones = golesEquipo;
+    else if(j.media >= 80) maxParticipaciones = Math.max(1, golesEquipo);
+    else if(j.media >= 75) maxParticipaciones = Math.max(1, golesEquipo - 1);
+    else if(j.media >= 70) maxParticipaciones = Math.max(1, golesEquipo - 2);
+    else maxParticipaciones = Math.max(1, golesEquipo - 3);
+
+    if(j.posicion === "Delantero"){
+      participaciones = Math.max(1, golesEquipo - randInt(0, 1));
+    } else if(j.posicion === "Mediocampista"){
+      participaciones = randInt(1, Math.min(maxParticipaciones, golesEquipo));
+    } else if(j.posicion === "Defensor"){
+      participaciones = randInt(1, Math.min(2, maxParticipaciones));
+    } else {
+      participaciones = 0;
+    }
+    participaciones = Math.min(participaciones, golesEquipo);
+
+    probGol = 24;
+    if(j.posicion === "Delantero") probGol += 16;
+    else if(j.posicion === "Mediocampista") probGol += 6;
+    else if(j.posicion === "Defensor") probGol -= 6;
+    probGol += (j.media - 65) * 0.6;
+    // Contra selecciones más fuertes que la tuya cuesta un poco más definir
+    probGol -= Math.max(0, fuerzaRival - fuerzaJugador) * 0.25;
+    probGol = Math.max(8, Math.min(55, Math.round(probGol)));
+  }
+
+  let chancesArquero = 0;
+  let probAtajar = 45;
+  if(j.posicion === "Arquero"){
+    chancesArquero = randInt(2, 4);
+    probAtajar = 35 + (j.media - 65) * 0.9;
+    probAtajar -= Math.max(0, fuerzaRival - fuerzaJugador) * 0.3;
+    probAtajar = Math.max(10, Math.min(70, Math.round(probAtajar)));
+  }
+
+  return {
+    rival: rivalNombre, rivalCodigo, golesMiEquipo, golesRival, golesEquipo,
+    participaciones, probGol, chancesArquero, probAtajar, fuerzaJugador, fuerzaRival
+  };
+}
+
+function jugarAmistosoSeleccion(){
+  const rivalPais = elegirRivalSeleccion();
+  const rivalCodigo = rivalPais[0];
+  const rivalNombre = rivalPais[1];
+  const plan = calcularPlanPartidoSeleccion(jugador, rivalCodigo, rivalNombre);
+  const eventos = construirEventosPartido(plan, jugador);
+  renderPartidoSeleccionEnVivo(plan, eventos, rivalCodigo, rivalNombre);
+}
+
+function renderPartidoSeleccionEnVivo(plan, eventos, rivalCodigo, rivalNombre){
+  let g1 = 0, g2 = 0; // marcador visible: tu selección - selección rival
+  let miGoles = 0, miAsistencias = 0;
+  let atajadas = 0, golesRecibidos = 0; // solo relevantes si sos arquero
+  let minuto = 0;
+  let idxEvento = 0;
+
+  screen.innerHTML = `
+    <div class="card partido-vivo">
+      <span class="eyebrow">Amistoso Internacional · Semana ${semana}/${TOTAL_SEMANAS} <span class="punto-vivo"></span></span>
+      <div style="text-align:center;"><div class="reloj-partido" id="reloj-partido">0'</div></div>
+      <div class="marcador">
+        <div class="equipo"><img src="${urlBandera(jugador.paisCodigo, 80)}" alt="${jugador.nacionalidad}"><span>${jugador.nacionalidad}</span></div>
+        <div class="goles" id="marcador-vivo">0 - 0</div>
+        <div class="equipo"><img src="${urlBandera(rivalCodigo, 80)}" alt="${rivalNombre}"><span>${rivalNombre}</span></div>
+      </div>
+      <div class="relato-partido" id="relato-partido"></div>
+    </div>
+  `;
+
+  const relatoEl = document.getElementById("relato-partido");
+  const relojEl = document.getElementById("reloj-partido");
+  const marcadorEl = document.getElementById("marcador-vivo");
+
+  function log(html){
+    const linea = document.createElement("div");
+    linea.className = "linea-relato";
+    linea.innerHTML = html;
+    relatoEl.prepend(linea);
+  }
+
+  function actualizarMarcadorVivo(){
+    marcadorEl.textContent = `${g1} - ${g2}`;
+  }
+
+  log(`<b>⚽ ¡Arranca el amistoso ante ${rivalNombre}!</b>`);
+
+  let intervalId = setInterval(tick, VELOCIDAD_MINUTO_MS);
+
+  function tick(){
+    minuto++;
+    relojEl.textContent = `${minuto}'`;
+
+    while(idxEvento < eventos.length && eventos[idxEvento].minuto === minuto){
+      const ev = eventos[idxEvento];
+      idxEvento++;
+
+      if(ev.tipo === "rival_gol"){
+        g2++;
+        actualizarMarcadorVivo();
+        log(`😱 <b>${minuto}'</b> Gol de ${rivalNombre}.`);
+
+      } else if(ev.tipo === "equipo_gol_companero"){
+        g1++;
+        actualizarMarcadorVivo();
+        log(`⚽ <b>${minuto}'</b> ¡Gol de un compañero de la Selección!`);
+
+      } else if(ev.tipo === "chance_jugador"){
+        clearInterval(intervalId);
+        log(`🔥 <b>${minuto}'</b> ¡Tenés una chance clara para hacer gol!`);
+
+        const jugarMinijuegoGol = randInt(1,2) === 1 ? mostrarMinijuegoGol : mostrarMinijuegoGolDireccion;
+        jugarMinijuegoGol(plan.probGol, (resultado)=>{
+          if(resultado === "gol"){
+            g1++;
+            actualizarMarcadorVivo();
+            miGoles++;
+            log(`🟢 <b>${minuto}'</b> ¡¡GOOOL DE ${jugador.nombre.toUpperCase()} CON LA ${jugador.nacionalidad.toUpperCase()}!! ⚽`);
+          } else if(resultado === "asistencia"){
+            g1++;
+            actualizarMarcadorVivo();
+            miAsistencias++;
+            log(`🎯 <b>${minuto}'</b> No llegaste a definir, pero la asistencia valió gol igual.`);
+          } else {
+            log(`😮‍💨 <b>${minuto}'</b> No llegaste a definir y ahí se cortó la jugada. Sigue el partido.`);
+          }
+
+          intervalId = setInterval(tick, VELOCIDAD_MINUTO_MS);
+        });
+        return;
+
+      } else if(ev.tipo === "chance_arquero"){
+        clearInterval(intervalId);
+        log(`⚠️ <b>${minuto}'</b> ¡Chance clara de ${rivalNombre}! Tenés que atajarla.`);
+
+        const jugarMinijuegoAtajar = randInt(1,2) === 1 ? mostrarMinijuegoAtajada : mostrarMinijuegoAtajadaDireccion;
+        jugarMinijuegoAtajar(plan.probAtajar, (resultado)=>{
+          if(resultado === "atajada"){
+            atajadas++;
+            log(`🧤 <b>${minuto}'</b> ¡ATAJADÓN de ${jugador.nombre.toUpperCase()}! Que la guarde.`);
+          } else {
+            g2++;
+            actualizarMarcadorVivo();
+            golesRecibidos++;
+            log(`😱 <b>${minuto}'</b> Gol de ${rivalNombre}. No llegaste a la pelota.`);
+          }
+
+          intervalId = setInterval(tick, VELOCIDAD_MINUTO_MS);
+        });
+        return;
+      }
+    }
+
+    if(minuto >= 90){
+      clearInterval(intervalId);
+      log(`<b>🏁 ¡Final del amistoso!</b>`);
+      setTimeout(()=> finalizarPartidoSeleccion(plan, g1, g2, miGoles, miAsistencias, atajadas, golesRecibidos, rivalCodigo, rivalNombre), 900);
+    }
+  }
+}
+
+function finalizarPartidoSeleccion(plan, g1, g2, goles, asistencias, atajadas, golesRecibidos, rivalCodigo, rivalNombre){
+  const golesMiEquipo = g1;
+  const golesRival = jugador.posicion === "Arquero" ? golesRecibidos : g2;
+
+  let nota;
+
+  if(jugador.posicion === "Arquero"){
+    nota = 5.5;
+    nota += (atajadas || 0) * 0.68;
+    nota -= golesRival * 0.5;
+    nota += (jugador.media - 60) * 0.02;
+    if(golesRival === 0 && atajadas > 0) nota += 0.8;
+  } else {
+    nota = 5.0 + ((jugador.media - 60) * 0.075);
+    nota += goles * 1.1;
+    nota += asistencias * 0.8;
+
+    if(golesMiEquipo > golesRival) nota += 0.5;
+    else if(golesMiEquipo === golesRival) nota += 0.2;
+    else nota -= 0.4;
+
+    if(jugador.posicion === "Defensor"){
+      if(golesRival <= 1) nota += 0.5;
+    } else if(jugador.posicion === "Mediocampista"){
+      nota += asistencias * 0.2;
+    } else if(jugador.posicion === "Delantero"){
+      nota += goles * 0.3;
+    }
+  }
+
+  nota += (Math.random() * 0.8 - 0.4);
+  nota = Math.round(Math.max(3.0, Math.min(10.0, nota)) * 10) / 10;
+
+  jugador.selPartidos++;
+  jugador.selGoles += goles;
+  jugador.selAsistencias += asistencias;
+  jugador.selAtajadas += (atajadas || 0);
+
+  let esMVP = false;
+  if(nota > 8.9){ jugador.media += 1; jugador.selMVP++; esMVP = true; }
+
+  let cambioMedia = 0;
+  if(nota >= 7){ jugador.media += 2; cambioMedia = 2; }
+  else if(nota < 6.3){ jugador.media -= 1; cambioMedia = -1; }
+
+  clampMedia();
+
+  const resultado = {
+    rivalNombre, rivalCodigo, miEquipo: golesMiEquipo, rivalGoles: golesRival,
+    goles, asistencias, atajadas: (atajadas || 0), nota, cambioMedia, esMVP
+  };
+
+  mostrarResultadoFinalSeleccion(resultado);
+}
+
+function mostrarResultadoFinalSeleccion(resultado){
+  let badge;
+  if(resultado.miEquipo > resultado.rivalGoles){
+    badge = `<span class="badge-resultado badge-gano">GANÓ TU SELECCIÓN</span>`;
+  } else if(resultado.miEquipo < resultado.rivalGoles){
+    badge = `<span class="badge-resultado badge-perdio">PERDIÓ TU SELECCIÓN</span>`;
+  } else {
+    badge = `<span class="badge-resultado badge-empato">EMPATE</span>`;
+  }
+
+  const cambioClase = resultado.cambioMedia > 0 ? "sube" : (resultado.cambioMedia < 0 ? "baja" : "");
+  const cambioTexto = resultado.cambioMedia > 0 ? `+${resultado.cambioMedia}` : (resultado.cambioMedia < 0 ? `${resultado.cambioMedia}` : "sin cambios");
+
+  const esArquero = jugador.posicion === "Arquero";
+  const statsRendimiento = esArquero
+    ? `<div class="stat-linea"><span>🧤 Atajadas</span><b>${resultado.atajadas}</b></div>`
+    : `
+      <div class="stat-linea"><span>⚽ Goles</span><b>${resultado.goles}</b></div>
+      <div class="stat-linea"><span>🎯 Asistencias</span><b>${resultado.asistencias}</b></div>
+    `;
+
+  screen.innerHTML = `
+    <div class="card">
+      <span class="eyebrow">Amistoso Internacional · Resultado</span>
+      ${badge}
+      <div class="marcador">
+        <div class="equipo"><img src="${urlBandera(jugador.paisCodigo, 80)}" alt="${jugador.nacionalidad}"><span>${jugador.nacionalidad}</span></div>
+        <div class="goles">${resultado.miEquipo} - ${resultado.rivalGoles}</div>
+        <div class="equipo"><img src="${urlBandera(resultado.rivalCodigo, 80)}" alt="${resultado.rivalNombre}"><span>${resultado.rivalNombre}</span></div>
+      </div>
+      <h2>Tu rendimiento</h2>
+      ${statsRendimiento}
+      <div class="stat-linea"><span>⭐ Nota</span><b>${resultado.nota}</b></div>
+      ${resultado.esMVP ? '<h2 style="color:black;">🏅 ¡Fuiste la figura del amistoso! (+1 de media) </h2>' : ''}
+      <div class="stat-linea"><span>Media</span><b class="media-cambio ${cambioClase}">${jugador.media} (${cambioTexto})</b></div>
+
+      <button class="btn-principal" id="btn-volver-torneo">Volver al torneo</button>
+    </div>
+  `;
+
+  document.getElementById("btn-volver-torneo").onclick = jugarPartidoDeLaSemana;
+}
 
 function jugarPartidoDeLaSemana(){
   const plan = calcularPlanPartido(jugador);
@@ -870,15 +1191,18 @@ function renderPartidoEnVivo(plan, eventos){
 
         const jugarMinijuegoGol = randInt(1,2) === 1 ? mostrarMinijuegoGol : mostrarMinijuegoGolDireccion;
         jugarMinijuegoGol(plan.probGol, (resultado)=>{
-          if(esPingu) g1++; else g2++;
-          actualizarMarcadorVivo();
-
           if(resultado === "gol"){
+            if(esPingu) g1++; else g2++;
+            actualizarMarcadorVivo();
             miGoles++;
             log(`🟢 <b>${minuto}'</b> ¡¡GOOOL DE ${jugador.nombre.toUpperCase()}!! ⚽`);
-          } else {
+          } else if(resultado === "asistencia"){
+            if(esPingu) g1++; else g2++;
+            actualizarMarcadorVivo();
             miAsistencias++;
             log(`🎯 <b>${minuto}'</b> No llegaste a definir, pero la asistencia valió gol igual.`);
+          } else {
+            log(`😮‍💨 <b>${minuto}'</b> No llegaste a definir y ahí se cortó la jugada. Sigue el partido.`);
           }
 
           intervalId = setInterval(tick, VELOCIDAD_MINUTO_MS);
@@ -991,7 +1315,8 @@ function mostrarMinijuego(config){
 
     setTimeout(()=>{
       overlay.remove();
-      callback(acierto ? resultadoExito : resultadoFallo);
+      const fallo = typeof resultadoFallo === "function" ? resultadoFallo() : resultadoFallo;
+      callback(acierto ? resultadoExito : fallo);
     }, 500);
   }
 
@@ -1012,9 +1337,16 @@ function mostrarMinijuegoGol(probGol, callback){
     textoBoton: "¡REMATAR!",
     idBoton: "btn-rematar",
     resultadoExito: "gol",
-    resultadoFallo: "asistencia",
+    resultadoFallo: resolverFalloGol,
     callback
   });
+}
+
+// Cuando fallás una chance de gol (en cualquiera de los dos minijuegos),
+// no siempre es asistencia: 60% de las veces sí, la pelota termina en
+// gol de un compañero; el otro 40% no pasa nada y el partido sigue igual.
+function resolverFalloGol(){
+  return randInt(1,100) <= 55 ? "asistencia" : "perdida";
 }
 
 // Minijuego del arquero: mismo mecanismo pero para atajar. Si tenés menos
@@ -1097,7 +1429,8 @@ function mostrarMinijuegoDireccion(config){
 
     setTimeout(()=>{
       overlay.remove();
-      callback(acierto ? resultadoExito : resultadoFallo);
+      const fallo = typeof resultadoFallo === "function" ? resultadoFallo() : resultadoFallo;
+      callback(acierto ? resultadoExito : fallo);
     }, 550);
   }
 
@@ -1119,7 +1452,7 @@ function mostrarMinijuegoGolDireccion(probGol, callback){
     eyebrow: "¡Chance de gol!",
     subtitulo: "Elegí para dónde patear",
     resultadoExito: "gol",
-    resultadoFallo: "asistencia",
+    resultadoFallo: resolverFalloGol,
     callback
   });
 }
@@ -1140,10 +1473,13 @@ function mostrarMinijuegoAtajadaDireccion(probAtajar, callback){
 // Cuando termina el partido en vivo: calcula la nota, actualiza al
 // jugador y muestra la pantalla de resultado (igual que antes).
 function finalizarPartidoEnVivo(plan, g1, g2, goles, asistencias, atajadas, golesRecibidos){
-  const golesMiEquipo = plan.golesMiEquipo;
+  const esPingu = jugador.club === "Pingu FC";
+  // El marcador real que terminó teniendo el partido (puede ser menor al
+  // plan original si alguna chance de gol quedó en "no pasó nada").
+  const golesMiEquipo = esPingu ? g1 : g2;
   // Si sos arquero, los goles del rival salen de lo que pasó en los
   // minijuegos de atajada (no del número fijo calculado antes del partido).
-  const golesRival = jugador.posicion === "Arquero" ? golesRecibidos : plan.golesRival;
+  const golesRival = jugador.posicion === "Arquero" ? golesRecibidos : (esPingu ? g2 : g1);
 
   let nota;
 
@@ -1167,7 +1503,7 @@ function finalizarPartidoEnVivo(plan, g1, g2, goles, asistencias, atajadas, gole
     else nota -= 0.4;
 
     if(jugador.posicion === "Defensor"){
-      if(golesRival <= 1) nota += 0.5;
+      if(golesRival <= 1) nota += 0.8;
     } else if(jugador.posicion === "Mediocampista"){
       nota += asistencias * 0.2;
     } else if(jugador.posicion === "Delantero"){
@@ -1183,11 +1519,11 @@ function finalizarPartidoEnVivo(plan, g1, g2, goles, asistencias, atajadas, gole
   jugador.asistencias += asistencias;
   jugador.atajadas += (atajadas || 0);
 
-  if(nota >= 8.6){ jugador.media += 1; jugador.mvp++; }
+  if(nota > 8.6){ jugador.media += 1; jugador.mvp++; }
 
   let cambioMedia = 0;
   if(nota >= 7){ jugador.media += 2; cambioMedia = 2; }
-  else if(nota < 6.3){ jugador.media -= 1; cambioMedia = -1; }
+  else if(nota < 6.2){ jugador.media -= 1; cambioMedia = -1; }
 
   clampMedia();
   notaActual = nota;
@@ -1205,10 +1541,10 @@ function otroClub(j){ return j.club === "Pingu FC" ? "Wachines FC" : "Pingu FC";
 const EVENTOS = {
   1: { emoji:"🥗", titulo:"El nutricionista", texto:"El nutricionista te ofrece una dieta estricta.",
     opciones:[
-      { label:"Aceptarla", icono:"🥗", run:(j)=>{ if(randInt(1,100) <= 75){ j.media+=4; return "Te sentis mejor fisicamente. (+4 de media)"; }
+      { label:"Aceptarla", icono:"🥗", run:(j)=>{ if(randInt(1,100) <= 79){ j.media+=4; return "Te sentis mejor fisicamente. (+4 de media)"; }
           return "No notaste cambios";
         }},
-      { label:"Comer lo que quieras", icono:"🍕", run:(j)=>{ j.media-=2; return "Disfrutaste la comida, pero no fue la mejor decisión. (-2 de media)"; } }
+      { label:"Comer lo que quieras", icono:"🍕", run:(j)=>{ j.media-=3; return "Disfrutaste la comida, pero no fue la mejor decisión. (-3 de media)"; } }
     ]},
   2: { emoji:"🏋️", titulo:"Entrenamiento extra", texto:"Hay entrenamiento extra en la costa.",
     opciones:[
@@ -1222,7 +1558,7 @@ const EVENTOS = {
     opciones:[
       { label:"Enfrentarlos", icono:"😤", run:(j)=>{
           if(randInt(1,100) <= 60){ j.media+=1; return "Los convenciste con tus palabras. (+1 de media)"; }
-          j.media-=2; return "La situación empeoró. (-2 de media)";
+          j.media-=3; return "La situación empeoró. (-3 de media)";
         }},
       { label:"Pedir disculpas", icono:"🙏", run:(j)=>{ j.media+=1; return "Prometiste levantar el nivel. (+1 de media)"; } },
       { label:"Ignorarlos", icono:"🙄", run:(j)=>{ return "Que la chupen."; } }
@@ -1247,8 +1583,8 @@ const EVENTOS = {
     ]},
   7: { emoji:"🤝", titulo:"Práctica extra", texto:"Un compañero quiere practicar después del entrenamiento.",
     opciones:[
-      { label:"Aceptar", icono:"🤝", run:(j)=>{ j.media+=4; return "Mejoró tu conexión con el equipo. (+4 de media)"; } },
-      { label:"Irte a tu casa", icono:"🚪", run:(j)=>{ return "Andaaa amargo"; } }
+      { label:"Aceptar", icono:"🤝", run:(j)=>{ if(randInt(1,100) <= 78){j.media+=4; return "Mejoró tu conexión con el equipo. (+4 de media)"; } j.media-=1; return "Te peleaste con el y te fuiste re mal. (-1 de media)";}},
+      { label:"Irte a tu casa", icono:"🚪", run:(j)=>{ j.media-=1;return "Andaaa amargo quedaste re mal (-1 de media)"; } }
     ]},
   8: { emoji:"🎉", titulo:"Joda antes del partido", texto:"Te invitan a una joda antes del partido.",
     opciones:[
@@ -1269,13 +1605,30 @@ const EVENTOS = {
     auto:(j)=>{ j.media-=3; return "(-3 de media)"; } },
   12:{ emoji:"🍔", titulo:"Comida rápida", texto:"Te ofrecen comida rápida.",
     opciones:[
-      { label:"Comer", icono:"🍔", run:(j)=>{ j.media-=3; return "Gordo de mierda (-3 de media)"; } },
-      { label:"No comer", icono:"🥦", run:(j)=>{ return "Bien."; } }
+      {label:"Comer",icono:"🍔",
+      run:(j)=>{
+        if(randInt(1,100) <= 30){
+          j.media += 1;
+          return "😋 La pasaste genial con tus amigos y no te afectó. (+1 de media)";
+        }
+        j.media -= 3;
+        return "🤢 La comida te cayó muy mal. (-3 de media)";
+      }
+    },
+      {
+      label:"No comer",
+      icono:"🥦",
+      run:(j)=>{
+        if(randInt(1,100) <= 40){
+          j.media -= 1;
+          return "😔 Te arrepentiste al ver a todos comiendo. (-1 de media)";
+        }
+        return "🥗 Elegiste cuidarte para el partido."; } }
     ]},
   13:{ emoji:"❤️", titulo:"Una mina que te gusta", texto:"Conocés a una mina que te gusta.",
     opciones:[
       { label:"Invitarla a salir", icono:"❤️", run:(j)=>{
-          if(randInt(1,100) <= 70){ j.media+=3; return "La cita salió muy bien. Te sentís más motivado. (+3 de media)"; }
+          if(randInt(1,100) <= 58){ j.media+=3; return "La cita salió muy bien. Te sentís más motivado. (+3 de media)"; }
           j.media-=1; return "Te re cortó el rostro. Te costó concentrarte unos días. (-1 de media)";
         }},
       { label:"Concentrarte en el fútbol", icono:"⚽", run:(j)=>{ return "Decidiste enfocarte completamente en el fútbol. Virgo."; } }
@@ -1283,11 +1636,11 @@ const EVENTOS = {
   14:{ emoji:"🏋️", titulo:"Dolor en el entrenamiento", texto:"En un entrenamiento sentís un dolor fuerte.",
     opciones:[
       { label:"Seguir entrenando", icono:"💪", run:(j)=>{
-          if(randInt(1,100) <= 40){ j.media-=4; return "Cagaste, La lesión empeoró. (-4 de media)"; }
+          if(randInt(1,100) <= 55){ j.media-=4; return "Cagaste, La lesión empeoró. (-4 de media)"; }
           j.media+=2; return "Terminaste el entrenamiento sin problemas. (+2 de media)";
         }},
       { label:"Parar inmediatamente", icono:"🛑", run:(j)=>{
-          if(randInt(1,100) <= 65){ j.media+=1; return "El médico confirmó que fue una buena decisión. (+1 de media)"; }
+          if(randInt(1,100) <= 60){ j.media+=1; return "El médico confirmó que fue una buena decisión. (+1 de media)"; }
           return "Era solo una molestia.";
         }}
     ]},
@@ -1312,7 +1665,7 @@ const EVENTOS = {
   18:{ emoji:"⚽", titulo:"Picado en el recreo", texto:"En el recreo organizan un picado.",
     opciones:[
       { label:"Jugar", icono:"⚽", run:(j)=>{
-          if(randInt(1,100) <= 40){ j.media-=2; return "Recibiste un golpe fuerte. (-2 de media)"; }
+          if(randInt(1,100) <= 35){ j.media-=3; return "Recibiste un golpe fuerte. (-3 de media)"; }
           j.media+=1; return "Metiste varios goles. (+1 de media)";
         }},
       { label:"Descansar", icono:"🛋️", run:(j)=>{ j.media+=2; return "Guardaste energías para el torneo. (+2 de media)"; } }
@@ -1350,10 +1703,10 @@ const EVENTOS = {
     opciones:[
       { label:"Tomar de la botella de otro", icono:"🤫", run:(j)=>{
           if(randInt(1,100) <= 75){ j.media+=1; return "te vas a hidratar correctamente (+1 de media)"; }
-          j.media-=1; return "Te pegaron un trompadón porque el dueño de la botella estaba loquito. (-1 de media)";
+          j.media-=2; return "Te pegaron un trompadón porque el dueño de la botella estaba loquito. (-2 de media)";
         }},
       { label:"bancarme la sed", icono:"💪", run:(j)=>{
-          if(randInt(1,100) <= 33){ j.media-=2; return "Se te bajó la presión (-2 de media)"; }
+          if(randInt(1,100) <= 33){ j.media-=3; return "Se te bajó la presión (-3 de media)"; }
           return "Te la bancas";
         }}
     ]},
@@ -1376,12 +1729,53 @@ const EVENTOS = {
   26:{ emoji:"🧍‍♂️", titulo:"Cambio de Posición", texto:"Tus compañeros te piden que cambies de posicion para mejorar el esquema",
     opciones:[
       { label:"Aceptar", icono:"👍", run:(j)=>{
-          if(randInt(1,100) <= 60){ j.media+=1; return "Te adaptaste y el equipo juega mejor (+1 de media)"; }
-          j.media-=1; return "Estás más incómodo en ese sector. (-1 de media)";
+          if(randInt(1,100) <= 68){ j.media+=1; return "Te adaptaste y el equipo juega mejor (+1 de media)"; }
+          j.media-=2; return "Estás más incómodo en ese sector. (-2 de media)";
         }},
       { label:"Rechazar", icono:"👎", run:(j)=>{
           if(randInt(1,100) <= 80){ j.media-=1; return "A tus compañeros no les gustó (-1 de media)"; }
           return "Te supieron entender";
+        }}
+    ]},
+  27:{
+  emoji:"🧢",
+  titulo:"La cinta de capitán",
+  texto:"El DT te ofrece ser el nuevo capitán del equipo.",
+  opciones:[
+    {
+      label:"Aceptar",
+      icono:"🧢",
+      run:(j)=>{
+        if(randInt(1,100) <= 55){
+          j.media += 2;
+          return "👏 Lideraste al equipo de gran manera. (+2 de media)";
+        }
+        if(randInt(1,100) <= 75){
+          return "😐 La responsabilidad no cambió tu rendimiento.";
+        }
+        j.media -= 2;
+        return "😓 La presión de ser capitán te superó. (-2 de media)";
+      }
+    },
+    {
+      label:"Rechazar",
+      icono:"🙅",
+      run:(j)=>{
+        if(randInt(1,100) <= 40){
+          j.media += 1;
+          return "😌 Preferiste concentrarte solo en jugar. (+1 de media)";
+        }
+        j.media -= 1;
+        return "😕 El DT esperaba más compromiso de vos. (-1 de media)";
+      }}]},
+  28:{ emoji:(j)=>`<img src="${urlBandera(j.paisCodigo, 40)}" alt="${j.nacionalidad}" style="width:28px;height:20px;object-fit:cover;border-radius:3px;vertical-align:middle;border:1px solid rgba(19,32,24,0.25);">`, titulo:"Convocatoria a la Selección", texto:(j)=>`¡La selección de ${j.nacionalidad} te llama para jugar un amistoso internacional!`,
+    opciones:[
+      { label:"Aceptar", icono:"✅", run:(j)=>{
+          if(randInt(1,100) <= 53){ j.media+=1; return "Jugaste muy bien con la selección. (+1 de media)"; }
+          j.media-=4; return "Te lesionaste jugando con la selección. (-4 de media)";
+        }},
+      { label:"Rechazar", icono:"❌", run:(j)=>{
+          j.media-=2; return "Te peleaste con tu representante y con tu familia por rechazar el llamado. (-2 de media)";
         }}
     ]},
 };
@@ -1550,7 +1944,15 @@ function iniciarSemana(){
 }
 
 function mostrarEvento(){
-  const id = randInt(1, 26);
+  // Con más de 90 de media, hay muchas más chances de que te llegue el
+  // llamado de la selección esta semana (en vez de depender de que
+  // salga al azar entre los 27 eventos).
+  let id;
+  if(jugador.media >= 87 && randInt(1,100) <= 65){
+    id = 28;
+  } else {
+    id = randInt(1, 27);
+  }
   //cambio evento
 
   // El evento de la hinchada (id 3) solo puede aparecer si la nota del
@@ -1562,11 +1964,12 @@ function mostrarEvento(){
 
   const ev = EVENTOS[id];
   const textoEv = typeof ev.texto === "function" ? ev.texto(jugador) : ev.texto;
+  const emojiEv = typeof ev.emoji === "function" ? ev.emoji(jugador) : ev.emoji;
 
   if(ev.auto){
     const resultado = ev.auto(jugador);
     clampMedia();
-    renderResultadoEvento(ev.emoji, ev.titulo, textoEv, resultado);
+    renderResultadoEvento(emojiEv, ev.titulo, textoEv, resultado);
     return;
   }
 
@@ -1577,7 +1980,7 @@ function mostrarEvento(){
   screen.innerHTML = `
     <div class="card">
       <span class="eyebrow">Semana ${semana}/${TOTAL_SEMANAS} · Evento</span>
-      <h3>${ev.emoji} ${ev.titulo}</h3>
+      <h3>${emojiEv} ${ev.titulo}</h3>
       <p>${textoEv}</p>
       <div class="opciones-grid" style="grid-template-columns:1fr;">${opcionesHtml}</div>
     </div>
@@ -1586,9 +1989,18 @@ function mostrarEvento(){
   screen.querySelectorAll(".opcion-btn").forEach(btn=>{
     btn.onclick = ()=>{
       const idx = parseInt(btn.dataset.idx, 10);
+
+      // Convocatoria a la selección (id 28), opción "Aceptar" (idx 0):
+      // en vez del resultado de texto normal, se interrumpe el torneo y
+      // se juega en vivo un amistoso contra una selección rival al azar.
+      if(id === 28 && idx === 0){
+        jugarAmistosoSeleccion();
+        return;
+      }
+
       const resultado = ev.opciones[idx].run(jugador);
       clampMedia();
-      renderResultadoEvento(ev.emoji, ev.titulo, textoEv, resultado);
+      renderResultadoEvento(emojiEv, ev.titulo, textoEv, resultado);
     };
   });
 }
@@ -1708,6 +2120,23 @@ function pantallaFinal(){
       <div class="stat-linea"><span>Asistencias</span><b>${jugador.asistencias}</b></div>
     `;
 
+  const statsSeleccion = esArquero
+    ? `<div class="stat-linea"><span>Atajadas</span><b>${jugador.selAtajadas}</b></div>`
+    : `
+      <div class="stat-linea"><span>Goles</span><b>${jugador.selGoles}</b></div>
+      <div class="stat-linea"><span>Asistencias</span><b>${jugador.selAsistencias}</b></div>
+    `;
+
+  const bloqueSeleccion = jugador.selPartidos > 0 ? `
+    <div class="card">
+      <h2><img class="bandera-img chica" src="${urlBandera(jugador.paisCodigo)}"> Con la Selección de ${jugador.nacionalidad}</h2>
+      <span class="eyebrow">Estadísticas con la selección</span>
+      <div class="stat-linea"><span>Partidos</span><b>${jugador.selPartidos}</b></div>
+      ${statsSeleccion}
+      <div class="stat-linea"><span>Figura del partido</span><b>${jugador.selMVP}</b></div>
+    </div>
+  ` : "";
+
   screen.innerHTML = `
     <div class="card" style="text-align:center;">
       <span class="eyebrow">Final de la Pingu Cup</span>
@@ -1716,7 +2145,7 @@ function pantallaFinal(){
     </div>
     <div class="card">
       <h2><img class="bandera-img chica" src="${urlBandera(jugador.paisCodigo)}"> ${jugador.nombre} · ${jugador.nacionalidad}</h2>
-      <span class="eyebrow">Tus estadísticas</span>
+      <span class="eyebrow">Tus estadísticas del torneo</span>
       <div class="stat-linea"><span>Partidos</span><b>${jugador.partidos}</b></div>
       ${statsFinales}
       <div class="stat-linea"><span>MVP</span><b>${jugador.mvp}</b></div>
@@ -1724,6 +2153,9 @@ function pantallaFinal(){
       <div class="stat-linea"><span>Títulos</span><b>${jugador.titulos}</b></div>
       <h2 style="margin-top:16px;">🏅 Premios</h2>
       <p>${premio}</p>
+    </div>
+    ${bloqueSeleccion}
+    <div class="card">
       <button class="btn-principal" id="btn-de-nuevo">Jugar de nuevo</button>
     </div>
   `;
